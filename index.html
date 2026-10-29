@@ -291,7 +291,7 @@ footer p{max-width:80ch}
 <section class="hero">
   <div class="wrap">
     <h1>A US calling floor run from Europe, built around the accepted transfer</h1>
-    <p class="lede">Your company owns the US numbers and is verified with the carrier. The dialer runs on a US server. Agents work from any country in a browser. Every live transfer is tracked until the buyer accepts it. Ten agents live in three fixed milestones.</p>
+    <p class="lede">During setup your company is verified by a US carrier and the US numbers go into its own name. The dialer runs on a US server. Agents work in a browser from the countries you choose, once their connection passes our audio test. Every live transfer is tracked until the buyer accepts it. Ten agents live in three fixed milestones.</p>
 
     <div class="path-wrap" aria-labelledby="path-h">
       <div class="path-top">
@@ -331,11 +331,12 @@ footer p{max-width:80ch}
         <p>US carriers sell local and toll-free numbers to companies registered outside the US. The carrier verifies your company with its own registration and business address; a US address is not part of it. New carrier accounts can start on tight limits for numbers and outbound calls until that verification passes, so it is the first thing we start.</p>
         <p>Every outbound call is signed with an attestation level that the receiving network reads before the phone rings:</p>
         <div class="attest">
-          <b class="a">A</b><span>The carrier knows your company and the number is yours. This is what your calls get once your company is verified and the numbers sit in your own account. Milestone 2 is signed off only when every number tests at A.</span>
+          <b class="a">A</b><span>The carrier knows your company and your right to the number. Your calls get this once the carrier has approved your company profile and, where it asks for one, a caller identity profile linked to it, with each number assigned in your own account. Milestone 2 is signed off only when every number shows A on the agreed test line.</span>
           <b class="b">B</b><span>The carrier knows you but not your right to the number shown.</span>
           <b class="c">C</b><span>The call entered the US from another network and nobody can vouch for it. Calls that start abroad usually land here, and they get answered less.</span>
         </div>
-        <p>That is why the dialer and the carrier connection sit in the US while your agents work wherever they are.</p>
+        <p>That is why the dialer and the carrier connection sit in the US while your agents work in the countries you choose.</p>
+        <p>A test call proves the signature as it leaves your carrier. If a call later crosses an older network, the signature can be dropped and the far end sees the call unsigned. So after go-live we watch answer rates and spam labels on every number, not just the test result.</p>
         <p class="muted">The FCC has open proposals on showing verified caller names and on marking calls that originate abroad. We build on verified identity and verified numbers now, and adjust the setup when final rules are published.</p>
       </div>
       <div>
@@ -345,7 +346,7 @@ footer p{max-width:80ch}
             <li>Company name, registration number and business address</li>
             <li>An authorized representative of the company</li>
             <li>Identity checks on the company before high-volume calling opens</li>
-            <li>The numbers you will show, assigned to your verified company profile</li>
+            <li>The numbers you will show, assigned to your verified company profile and, where required, its caller identity profile</li>
           </ul>
         </div>
         <div class="panel" style="margin-top:18px">
@@ -392,7 +393,7 @@ footer p{max-width:80ch}
         </style>
         <!-- zones -->
         <rect class="zone" x="10" y="10" width="280" height="520"/>
-        <text class="zt" x="28" y="38">Agents, any country</text>
+        <text class="zt" x="28" y="38">Agents, your countries</text>
         <rect class="zone" x="330" y="10" width="360" height="520"/>
         <text class="zt" x="348" y="38">In the US</text>
         <rect class="zone" x="730" y="10" width="320" height="520"/>
@@ -452,7 +453,7 @@ footer p{max-width:80ch}
       </svg>
       <div class="arch-list">
         <ol>
-          <li><strong>Agents, any country.</strong> Browser softphone and headset, encrypted audio to the dialer. Supervisors listen, coach and take over calls.</li>
+          <li><strong>Agents, in the countries you choose.</strong> Browser softphone and headset, encrypted audio to the dialer, each location tested before it goes live. Supervisors listen, coach and take over calls.</li>
           <li><strong>Lead intake and checks, in the US.</strong> Leads arrive by API in real time. Consent evidence, duplicates, opt-outs and calling hours are checked on arrival and again right before each dial.</li>
           <li><strong>Dialer on a US cloud server.</strong> Predictive, ratio, preview and inbound. Recordings, reports and off-server backups.</li>
           <li><strong>Locked down SIP edge.</strong> Only the carrier can reach it. Call and spend caps.</li>
@@ -466,7 +467,7 @@ footer p{max-width:80ch}
     <div class="arch-notes">
       <div>
         <h3>Your agents</h3>
-        <p>Nothing to install beyond a browser and a headset. Audio is encrypted from the agent's screen to the US server, and the phone call itself is placed from that server, not from abroad. Supervisors can listen, coach in the agent's ear or take over.</p>
+        <p>Nothing to install beyond a browser and a headset. Each agent location passes a connection and audio test before it goes live. Audio is encrypted from the agent's screen to the US server, and the phone call itself is placed from that server, not from abroad. Supervisors can listen, coach in the agent's ear or take over.</p>
       </div>
       <div>
         <h3>In the US</h3>
@@ -647,7 +648,7 @@ footer p{max-width:80ch}
             <tr><th scope="row">Concurrent call cap and daily spend alert at the dialer and the carrier</th><td>Crossing the test threshold triggers the alert</td></tr>
             <tr><th scope="row">Admin access through a private network with two-step login</th><td>The admin panel is unreachable from the open internet</td></tr>
             <tr><th scope="row">Agents get browser access to their screen only</th><td>An agent login cannot reach settings, lists or recordings</td></tr>
-            <tr><th scope="row">Backups: the database copied off the server every 15 minutes, recordings every 30 minutes, the full server daily</th><td>A full restore to a fresh server is rehearsed before go-live, and its recovery time is measured and recorded</td></tr>
+            <tr><th scope="row">Backups: the database copied off the server every 15 minutes, recordings every 30 minutes, the full server daily, every copy checked</th><td>A copy that fails raises an alert, and a full restore to a fresh server is rehearsed before go-live with its recovery time recorded</td></tr>
             <tr><th scope="row">Patching and monitoring</th><td>Alerts arrive in your chosen channel during the pilot</td></tr>
           </tbody>
         </table>
@@ -682,7 +683,7 @@ footer p{max-width:80ch}
         <p class="when">7 working days after carrier approval and access</p>
         <ul>
           <li>US server, dialer and locked down edge</li>
-          <li>Numbers and caller ID in place, every number tested at A attestation before sign-off</li>
+          <li>Numbers and caller ID in place, every number showing A attestation on the agreed test line before sign-off</li>
           <li>Inbound routing, IVR and queues</li>
           <li>Recording from connect with the disclosure up front, quality monitoring</li>
           <li>Lead intake with every check in front of the dialer, repeated right before each dial</li>
@@ -714,12 +715,13 @@ footer p{max-width:80ch}
         <li>A number added to the opt-out list while its lead waits in the queue is not dialed</li>
         <li>A lead outside its calling window waits for the next window</li>
         <li>The same lead arriving twice creates no second call and no second transfer</li>
-        <li>A test call from each of your numbers reaches a verification line that reads the signature and shows A attestation. Milestone 2 is not signed off until every number does</li>
+        <li>A test call from each of your numbers to the agreed verification line shows A attestation. Milestone 2 is not signed off until every number does</li>
         <li>On a live transfer the agent introduces the caller, the buyer accepts, the agent leaves and the call continues</li>
         <li>When a buyer does not answer, the transfer is logged as failed, the agent keeps the caller and nothing is billable</li>
         <li>A transfer counts as accepted only when the buyer's own rules are met, not when the call merely connects</li>
         <li>Recording starts at connect, every recording opens with the disclosure, and every playback is logged</li>
-        <li>A full restore to a fresh server works, and the recovery time is measured and recorded</li>
+        <li>A backup copy that fails raises an alert, and a full restore to a fresh server works with its recovery time measured and recorded</li>
+        <li>Each agent location passes a connection and audio test before its agents go live</li>
         <li>Ten agents dial at the agreed pace for a full hour with clean audio</li>
       </ul>
     </div>
@@ -735,7 +737,7 @@ footer p{max-width:80ch}
     <ol class="qa">
       <li><h3>Have you set up a call center for a European or non-US company calling US customers?</h3><p>We built the production calling edge for an Israeli contact-center platform: encrypted SIP and browser calling, fraud limits per account and flood protection, delivered in three milestones and signed off, with their technical lead available as a reference. We have also run our own offshore lead-generation and customer-service floor of 60 to 70 people, and our engineers work US hours every day for clients across US time zones.</p></li>
       <li><h3>Which dialer would you recommend, and why?</h3><p>VICIdial on a US cloud server. It covers predictive dialing, ratio dialing for power and progressive pacing, preview and manual dialing, plus inbound and blended calls in one system, carries no per-seat licence, and keeps your lead data and transfer logic under your control. The trade-off is administration, which our setup and managed operations cover. If you would rather own no servers, Convoso is the managed alternative, priced per seat. It is usually sold to larger floors, so we would confirm a 10-seat account and its price in writing first.</p></li>
-      <li><h3>Which providers can issue US numbers to a European company without a US address?</h3><p>Twilio and Telnyx can both put US numbers in the name of a company registered in Europe. Twilio's business profile accepts European registration numbers and asks for your business address, with no US address required. Telnyx limits a new account to numbers from its home country until it passes its verified tier, which adds identity checks on your company and a service address. Both sign calls from numbers you own with A attestation once your company is approved. Where they differ is dialer traffic. Twilio objects to a high volume of unanswered attempts and a low average call length. Telnyx bars predictive dialing of unsolicited calls and charges a fee on every dropped call once more than a fifth of calls are dropped before answer. We tune dialing pace and retry limits to the carrier's rules, price any attempt fees into your cost model, and in milestone 1 you get each carrier's terms for your traffic in writing before the final choice.</p></li>
+      <li><h3>Which providers can issue US numbers to a European company without a US address?</h3><p>Twilio and Telnyx can both put US numbers in the name of a company registered in Europe. Twilio's business profile accepts European registration numbers and asks for your business address, with no US address required. Telnyx limits a new account to numbers from its home country until it passes its verified tier, which adds identity checks on your company and a service address. Both sign calls from numbers you own with A attestation once your company passes their checks, and Twilio also asks for a caller identity profile that each number is assigned to. Where they differ is dialer traffic. Twilio objects to a high volume of unanswered attempts and a low average call length. Telnyx bars predictive dialing of unsolicited calls and charges a fee on every dropped call once more than a fifth of calls are dropped before answer. We tune dialing pace and retry limits to the carrier's rules, price any attempt fees into your cost model, and in milestone 1 you get each carrier's terms for your traffic in writing before the final choice.</p></li>
       <li><h3>Can you handle the complete setup?</h3><p>Yes: US server and dialer, locked down SIP edge, carrier trunks and numbers, agent accounts and permissions, inbound and outbound routing, IVR and queues, recording and quality monitoring, connection to one CRM and one call tracker, reporting, remote agent access, security, testing and handover.</p></li>
       <li><h3>What would the setup cost for about 10 agents, including monthly costs?</h3><p>Setup with us is $2,450 in three fixed milestones. Running cost for ten agents comes to <span class="num" id="q5_month">$0</span> a month in technology at the calculator's default volumes, backups included and no dialer licence fee. Managed operations add $750 a month if you want us to run it for you. Agent pay, lead cost, your call tracker and CRM subscriptions and taxes come on top; the calculator adds agent pay and lead cost for you.</p></li>
       <li><h3>How long would the implementation take?</h3><p>Blueprint in 3 working days. Two agents live 7 working days after the carrier approves your company and we have access. Ten agents 3 working days after that. Carrier review of your company usually takes a few working days and runs in parallel with our build.</p></li>
@@ -775,7 +777,7 @@ footer p{max-width:80ch}
           <li>Every account is opened in your company's name: carrier, numbers, server and dialer. We do not resell minutes or numbers.</li>
           <li>The price is fixed. If a task takes longer than we planned, that time is ours.</li>
           <li>Your current call flows keep running untouched while we build, and nothing goes live before it passes testing.</li>
-          <li>Lead data is copied off the server every 15 minutes and recordings every 30 minutes, so a server failure can cost at most the last 15 minutes of data and 30 minutes of recordings. A full restore is rehearsed before go-live, and the measured recovery time is written into the handover.</li>
+          <li>Lead data is copied off the server every 15 minutes and recordings every 30 minutes. Those are the recovery targets, held by an alert on any copy that fails and proven by a full restore rehearsed before go-live, with the measured recovery time written into the handover.</li>
           <li>The blueprint is yours to keep, whoever builds the rest.</li>
         </ul>
       </div>
