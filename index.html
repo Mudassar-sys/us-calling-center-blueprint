@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>US calling center blueprint</title>
+<meta name="description" content="Blueprint for a US calling center run from Europe with offshore agents: US numbers, dialer, compliance, cost per accepted transfer and rollout.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='8' cy='16' r='5' fill='%231E7A50'/%3E%3Ccircle cx='24' cy='16' r='5' fill='%23142033'/%3E%3Crect x='12' y='15' width='8' height='2' fill='%23142033'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFCFD;
+  --band:#EEF2F6;
+  --ink:#142033;
+  --muted:#536176;
+  --rule:#CCD5DF;
+  --link:#3B5AC0;
+  --pass:#1E7A50;
+  --hold-text:#8A5500;
+  --hold:#E3A008;
+  --block:#B23A2E;
+  --idle:#A3AEBB;
+  --measure:68ch;
+  --wrap:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:var(--link);text-underline-offset:3px}
+a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--link);outline-offset:3px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:8px 12px;z-index:10}
+.skip:focus{left:8px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:5;background:rgba(251,252,253,.94);backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;align-items:center;gap:28px;min-height:56px}
+.bar .name{font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.bar nav{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.bar nav::-webkit-scrollbar{display:none}
+.bar ul{display:flex;gap:20px;list-style:none;margin:0;padding:0;white-space:nowrap}
+.bar nav a{color:var(--muted);text-decoration:none;font-weight:500;font-size:.94rem;padding:6px 0;display:inline-block}
+.bar nav a:hover{color:var(--ink)}
+
+/* type */
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em;margin:0}
+h1{font-size:clamp(2.1rem,4.6vw,3.5rem);font-weight:800;max-width:21ch}
+h2{font-size:clamp(1.6rem,2.8vw,2.2rem);font-weight:800;max-width:24ch}
+h3{font-size:1.2rem;font-weight:700;letter-spacing:-.01em}
+p{margin:0 0 1em;max-width:var(--measure)}
+.lede{font-size:1.18rem;line-height:1.55;color:#24324A;max-width:60ch;margin-top:22px}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* sections */
+section{padding:84px 0;border-top:1px solid var(--rule)}
+section.band{background:var(--band)}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-bottom:34px}
+.sec-head p{color:var(--muted);margin:0}
+
+/* hero */
+.hero{padding:72px 0 64px;border-top:0}
+.path-wrap{margin-top:52px;border:1px solid var(--rule);background:#fff;padding:26px 26px 22px}
+.path-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;margin-bottom:22px}
+.path-top h2{font-size:1.15rem;letter-spacing:-.01em;max-width:none}
+.scenarios{display:flex;flex-wrap:wrap;gap:8px}
+.scenarios button{
+  font:inherit;font-size:.92rem;font-weight:600;color:var(--ink);
+  background:var(--paper);border:1px solid var(--rule);border-radius:6px;
+  padding:7px 12px;cursor:pointer;
+}
+.scenarios button:hover{border-color:var(--ink)}
+.scenarios button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.path{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;counter-reset:step}
+.step{position:relative;padding:0 10px 0 0}
+.step::before{ /* connector from the previous lamp */
+  content:"";position:absolute;top:13px;right:100%;width:calc(100% - 28px);height:2px;background:var(--rule);
+}
+.step:first-child::before{display:none}
+.step[data-state="pass"]::before{background:var(--pass)}
+.step[data-state="hold"]::before{background:var(--hold)}
+.step[data-state="block"]::before{background:var(--block)}
+.lamp{
+  display:block;width:28px;height:28px;border-radius:50%;border:2px solid var(--idle);background:#fff;
+  position:relative;transition:background-color .25s ease,border-color .25s ease,transform .25s ease;
+}
+.lamp::after{content:"";position:absolute;inset:6px;border-radius:50%;background:transparent;transition:background-color .25s ease}
+.step[data-state="pass"] .lamp{border-color:var(--pass)}
+.step[data-state="pass"] .lamp::after{background:var(--pass)}
+.step[data-state="hold"] .lamp{border-color:var(--hold)}
+.step[data-state="hold"] .lamp::after{background:var(--hold)}
+.step[data-state="block"] .lamp{border-color:var(--block)}
+.step[data-state="block"] .lamp::after{background:var(--block)}
+.step.lit .lamp{transform:scale(1.12)}
+.step-title{display:block;font-weight:700;margin-top:12px;font-size:.98rem;letter-spacing:-.005em}
+.step-title::before{counter-increment:step;content:counter(step) ". ";color:var(--muted);font-weight:600}
+.step-note{display:block;font-size:.88rem;line-height:1.45;color:var(--muted);margin-top:4px;min-height:5.8em}
+.step[data-state="idle"] .step-note{color:#8A95A3}
+.outcome{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--rule);font-weight:600;max-width:none}
+.outcome .tag{display:inline-block;font-size:.82rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:10px;color:#fff;background:var(--pass);vertical-align:1px}
+.outcome .tag.hold{background:var(--hold);color:#2A1C00}
+.outcome .tag.block{background:var(--block)}
+.path-note{font-size:.85rem;color:var(--muted);margin:10px 0 0;max-width:none}
+
+/* two-column text blocks */
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:48px;align-items:start}
+.panel{background:#fff;border:1px solid var(--rule);padding:24px}
+.panel h3{margin-bottom:12px}
+.panel ul{margin:0;padding-left:20px}
+.panel li{margin:0 0 8px}
+.attest{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;margin:18px 0 22px;max-width:var(--measure)}
+.attest b{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;font-weight:800;color:#fff}
+.attest .a{background:var(--pass)}
+.attest .b{background:var(--hold);color:#2A1C00}
+.attest .c{background:var(--block)}
+.attest span{align-self:center}
+
+/* architecture */
+.arch{background:#fff;border:1px solid var(--rule);padding:18px}
+.arch svg{display:block;width:100%;height:auto}
+.arch-list{display:none}
+.arch-list ol{margin:0;padding-left:22px}
+.arch-list li{margin-bottom:12px}
+.arch-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:30px}
+.arch-notes h3{margin-bottom:8px}
+.arch-notes p{font-size:.96rem;color:#2A384F}
+
+/* tables */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--rule);background:#fff}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:14px 16px;border-bottom:1px solid var(--rule)}
+thead th{font-size:.95rem;background:var(--paper);border-bottom:2px solid var(--ink)}
+tbody th{font-weight:700;width:17%;color:var(--ink)}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+td .fit{display:inline-block;font-weight:700;font-size:.82rem;margin-bottom:4px}
+.fit.good{color:var(--pass)}
+.fit.mid{color:var(--hold-text)}
+.fit.weak{color:var(--block)}
+col.pick{background:#F3F8F5}
+.verdict{margin-top:30px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px}
+.verdict h3{margin-bottom:10px}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:0;border:1px solid var(--rule);background:#fff}
+.calc-in{padding:24px;border-right:1px solid var(--rule)}
+.calc-out{padding:24px;background:var(--paper)}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 18px}
+.field label{display:block;font-size:.88rem;font-weight:600;margin-bottom:6px;line-height:1.3}
+.field input{
+  width:100%;font:inherit;font-variant-numeric:tabular-nums;font-size:1rem;color:var(--ink);
+  border:1px solid var(--rule);border-radius:6px;padding:9px 10px;background:#fff;
+}
+.field input:focus{border-color:var(--link)}
+.field small{display:block;color:var(--muted);font-size:.8rem;margin-top:4px;line-height:1.35}
+.calc fieldset{border:0;padding:0;margin:0 0 22px}
+.calc legend{font-weight:700;font-size:1rem;margin-bottom:12px;padding:0}
+details.rates{margin-top:6px;border-top:1px solid var(--rule);padding-top:14px}
+details.rates summary{cursor:pointer;font-weight:700}
+details.rates .fields{margin-top:14px}
+.big{font-size:2.6rem;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:4px 0 2px}
+.out-label{font-weight:600;color:var(--muted);font-size:.92rem;margin:0}
+.out-block{padding:0 0 18px;margin-bottom:18px;border-bottom:1px solid var(--rule)}
+.out-block:last-of-type{border-bottom:0}
+.breakdown{list-style:none;margin:8px 0 0;padding:0;font-size:.92rem}
+.breakdown li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--rule)}
+.breakdown li:last-child{border-bottom:0}
+.calc-foot{font-size:.85rem;color:var(--muted);margin:14px 0 0}
+
+/* controls */
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.controls table{min-width:0}
+.controls tbody th{width:48%;font-weight:600}
+.controls .table-wrap{border:1px solid var(--rule)}
+
+/* rollout */
+.miles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--rule);background:#fff}
+.mile{padding:24px;border-right:1px solid var(--rule)}
+.mile:last-child{border-right:0}
+.mile .when{font-weight:700;color:var(--pass);margin:6px 0 12px}
+.mile ul{margin:0;padding-left:20px;font-size:.95rem}
+.mile li{margin-bottom:6px}
+.tests{margin-top:36px}
+.tests ul{columns:2;column-gap:40px;padding-left:20px;margin:12px 0 0}
+.tests li{break-inside:avoid;margin-bottom:10px}
+
+/* questions */
+.qa{list-style:none;margin:0;padding:0;counter-reset:q;max-width:880px}
+.qa li{counter-increment:q;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.qa li:last-child{border-bottom:0}
+.qa li::before{content:counter(q);font-weight:800;font-size:1.25rem;color:var(--muted);grid-row:span 2}
+.qa h3{font-size:1.06rem}
+.qa p{margin:6px 0 0}
+
+/* price */
+.price{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:start}
+.price table{min-width:0}
+.price tbody th,.price tfoot th{width:40%}
+.price tfoot td,.price tfoot th{font-weight:800;border-top:2px solid var(--ink);border-bottom:0}
+.price td.amt,.price th.amt{text-align:right;white-space:nowrap}
+.terms{margin:0;padding-left:20px}
+.terms li{margin-bottom:10px}
+.ops{margin-top:26px;padding:20px 22px;border:1px solid var(--rule);background:#fff}
+.ops h3{margin-bottom:6px}
+
+/* start */
+.start ol{max-width:var(--measure);padding-left:22px;margin:0}
+.start li{margin-bottom:10px}
+
+footer{border-top:1px solid var(--rule);padding:28px 0 44px;color:var(--muted);font-size:.88rem}
+footer p{max-width:80ch}
+
+/* responsive */
+@media (max-width: 980px){
+  .cols,.verdict,.price{grid-template-columns:minmax(0,1fr);gap:28px}
+  .calc{grid-template-columns:minmax(0,1fr)}
+  .calc-in{border-right:0;border-bottom:1px solid var(--rule)}
+  .arch-notes{grid-template-columns:minmax(0,1fr);gap:18px}
+  .controls{grid-template-columns:minmax(0,1fr)}
+  .miles{grid-template-columns:minmax(0,1fr)}
+  .mile{border-right:0;border-bottom:1px solid var(--rule)}
+  .mile:last-child{border-bottom:0}
+}
+@media (max-width: 760px){
+  body{font-size:16px}
+  section{padding:60px 0}
+  .hero{padding:44px 0 44px}
+  .path-wrap{padding:20px 18px}
+  .path{grid-template-columns:minmax(0,1fr);gap:0}
+  .step{display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:14px;padding:0 0 16px}
+  .step::before{display:none}
+  .step::after{content:"";position:absolute;left:13px;top:30px;bottom:-2px;width:2px;background:var(--rule)}
+  .step:last-child::after{display:none}
+  .step:has(+ .step[data-state="pass"])::after{background:var(--pass)}
+  .step:has(+ .step[data-state="hold"])::after{background:var(--hold)}
+  .step:has(+ .step[data-state="block"])::after{background:var(--block)}
+  .lamp{grid-row:span 2}
+  .step-title{margin-top:2px}
+  .step-note{min-height:0}
+  .arch svg{display:none}
+  .arch-list{display:block}
+  .fields{grid-template-columns:minmax(0,1fr)}
+  .tests ul{columns:1}
+  .big{font-size:2.2rem}
+}
+@media (prefers-reduced-motion: reduce){
+  .lamp,.lamp::after{transition:none}
+  .step.lit .lamp{transform:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="bar">
+  <div class="wrap">
+    <span class="name">Calling floor blueprint</span>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#numbers">Numbers</a></li>
+        <li><a href="#setup">Setup</a></li>
+        <li><a href="#dialer">Dialer</a></li>
+        <li><a href="#cost">Cost</a></li>
+        <li><a href="#controls">Controls</a></li>
+        <li><a href="#rollout">Rollout</a></li>
+        <li><a href="#questions">Your questions</a></li>
+        <li><a href="#price">Price</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <h1>A US calling floor run from Europe, built around the accepted transfer</h1>
+    <p class="lede">Your company owns the US numbers and is verified with the carrier. The dialer runs on a US server. Agents work from any country in a browser. Every live transfer is tracked until the buyer accepts it. Ten agents live in three fixed milestones.</p>
+
+    <div class="path-wrap" aria-labelledby="path-h">
+      <div class="path-top">
+        <h2 id="path-h">How one lead moves through the system</h2>
+        <div class="scenarios" role="group" aria-label="Choose a case">
+          <button type="button" data-case="new" aria-pressed="true">New lead</button>
+          <button type="button" data-case="optout" aria-pressed="false">On an opt-out list</button>
+          <button type="button" data-case="hours" aria-pressed="false">Outside calling hours</button>
+          <button type="button" data-case="busy" aria-pressed="false">Buyer does not answer</button>
+          <button type="button" data-case="dupe" aria-pressed="false">Same lead twice</button>
+        </div>
+      </div>
+      <ol class="path" id="path">
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Lead arrives</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Checks</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Dialer calls</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Carrier signs</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Agent qualifies</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Live transfer</span><span class="step-note"></span></li>
+        <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Accepted</span><span class="step-note"></span></li>
+      </ol>
+      <p class="outcome" id="outcome" aria-live="polite"></p>
+      <p class="path-note">This is how the finished system handles each case. Each case is also a written acceptance test in the rollout below.</p>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section id="numbers" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Yes, a European company can own and use US numbers</h2>
+      <p>The question that decides everything else is not where you are registered. It is whether the carrier has verified who you are.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <p>US carriers sell local and toll-free numbers to companies registered outside the US. The carrier verifies your company with its own registration and business address; a US address is not part of it. New carrier accounts can start on tight limits for numbers and outbound calls until that verification passes, so it is the first thing we start.</p>
+        <p>Every outbound call is signed with an attestation level that the receiving network reads before the phone rings:</p>
+        <div class="attest">
+          <b class="a">A</b><span>The carrier knows your company and the number is yours. This is what your calls get once your company is verified and the numbers sit in your own account.</span>
+          <b class="b">B</b><span>The carrier knows you but not your right to the number shown.</span>
+          <b class="c">C</b><span>The call entered the US from another network and nobody can vouch for it. Calls that start abroad almost always land here, and they get answered less.</span>
+        </div>
+        <p>That is why the dialer and the carrier connection sit in the US while your agents work wherever they are.</p>
+        <p class="muted">The FCC has open proposals on showing verified caller names and on marking calls that originate abroad. We build on verified identity and verified numbers now, and adjust the setup when final rules are published.</p>
+      </div>
+      <div>
+        <div class="panel">
+          <h3>What the carrier checks</h3>
+          <ul>
+            <li>Company name, registration number and business address</li>
+            <li>An authorized representative of the company</li>
+            <li>Identity checks on the company before high-volume calling opens</li>
+            <li>The numbers you will show, assigned to your verified company profile</li>
+          </ul>
+        </div>
+        <div class="panel" style="margin-top:18px">
+          <h3>What we do with your numbers</h3>
+          <ul>
+            <li>Prepare the verification pack and open every account in your company's name</li>
+            <li>Register each number with the free caller registry that feeds carrier spam analytics</li>
+            <li>Show local numbers that match the lead's area</li>
+            <li>Cap calls per number per day and rotate across the pool</li>
+            <li>Check labels every week and replace a flagged number before it costs you answers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP / ARCHITECTURE -->
+<section id="setup">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The setup, end to end</h2>
+      <p>Three places: where your agents sit, what runs in the US, and who is on the other end of the call.</p>
+    </div>
+    <figure class="arch" aria-labelledby="arch-cap" style="margin:0">
+      <svg viewBox="0 0 1060 540" role="img" aria-labelledby="arch-title arch-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="arch-title">Architecture of the calling floor</title>
+        <desc id="arch-desc">Agents abroad connect by encrypted browser audio to a dialer on a US server. Leads pass intake checks before dialing. Calls leave through a locked down SIP edge to a US carrier on numbers your company owns, and reach consumers signed with full attestation. Live transfers go to buyers through your call tracker. Dispositions and transfer records flow to your CRM.</desc>
+        <defs>
+          <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#142033"/></marker>
+          <marker id="arwg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#1E7A50"/></marker>
+        </defs>
+        <style>
+          .zone{fill:#F4F7FA;stroke:#CCD5DF}
+          .zt{font:700 15px 'Public Sans',sans-serif;fill:#536176}
+          .bx{fill:#fff;stroke:#142033;stroke-width:1.5}
+          .bxg{fill:#fff;stroke:#1E7A50;stroke-width:2}
+          .t1{font:700 15px 'Public Sans',sans-serif;fill:#142033}
+          .t2{font:400 12.5px 'Public Sans',sans-serif;fill:#536176}
+          .ln{stroke:#142033;stroke-width:1.5;fill:none}
+          .lng{stroke:#1E7A50;stroke-width:2;fill:none}
+          .lb{font:600 12px 'Public Sans',sans-serif;fill:#142033}
+          .lbg{font:600 12px 'Public Sans',sans-serif;fill:#1E7A50}
+        </style>
+        <!-- zones -->
+        <rect class="zone" x="10" y="10" width="280" height="520"/>
+        <text class="zt" x="28" y="38">Agents, any country</text>
+        <rect class="zone" x="330" y="10" width="360" height="520"/>
+        <text class="zt" x="348" y="38">In the US</text>
+        <rect class="zone" x="730" y="10" width="320" height="520"/>
+        <text class="zt" x="748" y="38">Other end of the call</text>
+
+        <!-- agents -->
+        <rect class="bx" x="30" y="214" width="240" height="96"/>
+        <text class="t1" x="46" y="242">Agents in a browser</text>
+        <text class="t2" x="46" y="264">Softphone, headset, no installs</text>
+        <text class="t2" x="46" y="282">Encrypted audio to the dialer</text>
+        <rect class="bx" x="30" y="340" width="240" height="78"/>
+        <text class="t1" x="46" y="368">Supervisors</text>
+        <text class="t2" x="46" y="390">Listen, coach, take over a call</text>
+
+        <!-- US column -->
+        <rect class="bx" x="350" y="58" width="320" height="58"/>
+        <text class="t1" x="366" y="84">Web forms and lead partners</text>
+        <text class="t2" x="366" y="104">Leads posted by API in real time</text>
+        <rect class="bx" x="350" y="140" width="320" height="64"/>
+        <text class="t1" x="366" y="166">Lead intake and checks</text>
+        <text class="t2" x="366" y="188">Consent, duplicates, opt-outs, hours</text>
+        <rect class="bxg" x="350" y="228" width="320" height="82"/>
+        <text class="t1" x="366" y="256">Dialer on a US cloud server</text>
+        <text class="t2" x="366" y="278">Predictive, ratio, preview, inbound</text>
+        <text class="t2" x="366" y="296">Recordings, reports, nightly backups</text>
+        <rect class="bx" x="350" y="334" width="320" height="64"/>
+        <text class="t1" x="366" y="360">Locked down SIP edge</text>
+        <text class="t2" x="366" y="382">Carrier-only access, call and spend caps</text>
+        <rect class="bxg" x="350" y="422" width="320" height="82"/>
+        <text class="t1" x="366" y="450">US carrier</text>
+        <text class="t2" x="366" y="472">Numbers owned by your company</text>
+        <text class="t2" x="366" y="490">Outbound signed with full attestation</text>
+
+        <!-- right column -->
+        <rect class="bx" x="750" y="140" width="280" height="80"/>
+        <text class="t1" x="766" y="168">Your CRM and call tracker</text>
+        <text class="t2" x="766" y="190">Dispositions, transfers, outcomes</text>
+        <rect class="bx" x="750" y="300" width="280" height="80"/>
+        <text class="t1" x="766" y="328">Buyers</text>
+        <text class="t2" x="766" y="350">Law firms and service companies</text>
+        <rect class="bx" x="750" y="430" width="280" height="74"/>
+        <text class="t1" x="766" y="458">Consumers</text>
+        <text class="t2" x="766" y="480">Leads who asked to be called</text>
+
+        <!-- links -->
+        <path class="ln" d="M510 116 L510 138" marker-end="url(#arw)"/>
+        <path class="ln" d="M510 204 L510 226" marker-end="url(#arw)"/>
+        <path class="ln" d="M510 310 L510 332" marker-end="url(#arw)"/>
+        <path class="ln" d="M510 398 L510 420" marker-end="url(#arw)"/>
+        <path class="lng" d="M272 262 L348 262" marker-end="url(#arwg)" marker-start="url(#arwg)"/>
+        <text class="lbg" x="278" y="252">audio</text>
+        <path class="ln" d="M672 252 L712 252 L712 180 L748 180" marker-end="url(#arw)"/>
+        <path class="lng" d="M672 468 L748 468" marker-end="url(#arwg)"/>
+        <text class="lbg" x="678" y="458">signed A</text>
+        <path class="ln" d="M672 440 L712 440 L712 340 L748 340" marker-end="url(#arw)"/>
+        <text class="lb" x="698" y="412" text-anchor="end">transfer leg</text>
+      </svg>
+      <div class="arch-list">
+        <ol>
+          <li><strong>Agents, any country.</strong> Browser softphone and headset, encrypted audio to the dialer. Supervisors listen, coach and take over calls.</li>
+          <li><strong>Lead intake and checks, in the US.</strong> Leads arrive by API in real time. Consent evidence, duplicates, opt-outs and calling hours are checked before any dial.</li>
+          <li><strong>Dialer on a US cloud server.</strong> Predictive, ratio, preview and inbound. Recordings, reports and nightly backups.</li>
+          <li><strong>Locked down SIP edge.</strong> Only the carrier can reach it. Call and spend caps.</li>
+          <li><strong>US carrier.</strong> Numbers owned by your company. Outbound signed with full attestation.</li>
+          <li><strong>Other end of the call.</strong> Consumers who asked to be called, buyers reached by live transfer, and your CRM and call tracker receiving every outcome.</li>
+        </ol>
+      </div>
+      <figcaption id="arch-cap" class="muted" style="font-size:.88rem;margin-top:12px">Green marks the parts that carry your caller reputation: the dialer, the carrier and the signed call.</figcaption>
+    </figure>
+
+    <div class="arch-notes">
+      <div>
+        <h3>Your agents</h3>
+        <p>Nothing to install beyond a browser and a headset. Audio is encrypted from the agent's screen to the US server, and the phone call itself is placed from that server, not from abroad. Supervisors can listen, coach in the agent's ear or take over.</p>
+      </div>
+      <div>
+        <h3>In the US</h3>
+        <p>One cloud server runs the dialer for ten agents with room to grow, behind an edge that only accepts traffic from the carrier. Leads are checked before they reach the dialer, never after.</p>
+      </div>
+      <div>
+        <h3>Your data</h3>
+        <p>Your company is the controller under GDPR, so every vendor signs a processing agreement, offshore access runs under transfer safeguards, agents see only what the call needs, and every playback of a recording is logged.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIALER -->
+<section id="dialer" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Three dialers measured on your six criteria</h2>
+      <p>Reliability, pricing, scalability, CRM integrations, reporting and ease of use, plus the dialing modes a lead floor needs.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <colgroup><col><col class="pick"><col><col></colgroup>
+        <thead>
+          <tr><th scope="col">Criteria</th><th scope="col">VICIdial, self-hosted in the US</th><th scope="col">Convoso, managed cloud</th><th scope="col">Five9, enterprise cloud</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Dialing modes</th>
+            <td><span class="fit good">Strong</span><br>Predictive with an adaptive algorithm, ratio dialing for power and progressive pacing, preview and manual, inbound and blended</td>
+            <td><span class="fit good">Strong</span><br>Predictive dialing with sub-5-second speed to lead, plus a manual dialing product</td>
+            <td><span class="fit good">Strong</span><br>Predictive, progressive, power and preview, plus a manual-only mode</td></tr>
+          <tr><th scope="row">Compliance tools</th>
+            <td><span class="fit mid">Fair</span><br>System-wide and per-campaign Do Not Call lists, adjustable drop rate for predictive dialing, answering machine detection, recording. Consent and list checks run in our intake in front of it</td>
+            <td><span class="fit good">Strong</span><br>Automatic checks against internal, federal and state Do Not Call lists before dialing, state dialing rules enforced, caller ID reputation tools</td>
+            <td><span class="fit good">Strong</span><br>Do Not Call list management, time-zone dialing rules, verified caller ID signing, a manual-only mode for consent-sensitive lists</td></tr>
+          <tr><th scope="row">Pricing</th>
+            <td><span class="fit good">Strong</span><br>Open source with no licence fee. You pay the server, numbers and minutes</td>
+            <td><span class="fit mid">Fair</span><br>Not published. Quoted per seat</td>
+            <td><span class="fit mid">Fair</span><br>Not published. Quoted per seat</td></tr>
+          <tr><th scope="row">Reliability</th>
+            <td><span class="fit mid">Fair</span><br>Over 14,000 installations worldwide. Uptime depends on the server and its administration, which we set up and monitor</td>
+            <td><span class="fit good">Strong</span><br>Run by the vendor in its own cloud</td>
+            <td><span class="fit good">Strong</span><br>Run by the vendor in its own cloud</td></tr>
+          <tr><th scope="row">Scalability</th>
+            <td><span class="fit good">Strong</span><br>Scales to hundreds of seats. Seats are free; servers are added as you grow</td>
+            <td><span class="fit good">Strong</span><br>Add seats with the vendor</td>
+            <td><span class="fit good">Strong</span><br>Built for very large centers</td></tr>
+          <tr><th scope="row">CRM integrations</th>
+            <td><span class="fit mid">Fair</span><br>Agent and non-agent APIs to add and update leads, pull recordings and manage users. We build the link to your CRM and call tracker</td>
+            <td><span class="fit mid">Fair</span><br>Vendor connectors and API. Check your CRM is on their list</td>
+            <td><span class="fit good">Strong</span><br>Pre-built connectors for the major CRMs</td></tr>
+          <tr><th scope="row">Reporting</th>
+            <td><span class="fit good">Strong</span><br>Real-time and historical reports built in, with exports for your own dashboards</td>
+            <td><span class="fit good">Strong</span><br>Built-in analytics</td>
+            <td><span class="fit good">Strong</span><br>Built-in reporting and analytics</td></tr>
+          <tr><th scope="row">Ease of use</th>
+            <td><span class="fit mid">Fair</span><br>Plain agent screen. Administration needs a trained admin</td>
+            <td><span class="fit good">Strong</span><br>Simplest for a team without an admin</td>
+            <td><span class="fit mid">Fair</span><br>Broad feature set that takes longer to configure</td></tr>
+          <tr><th scope="row">Who runs it</th>
+            <td>Your server, our administration</td>
+            <td>The vendor</td>
+            <td>The vendor</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="verdict">
+      <div>
+        <h3>Our recommendation: VICIdial on a US cloud server</h3>
+        <p>It gives you predictive dialing, ratio dialing for power and progressive pacing, preview and manual dialing, plus inbound and blended calls in one system, with no per-seat licence. Your leads, recordings and transfer logic stay on a server your company owns. The cost is administration, which our setup and managed operations cover.</p>
+        <p>If you would rather own no servers at all, Convoso is the managed choice, at a per-seat price.</p>
+      </div>
+      <div>
+        <h3>Why not Aircall or JustCall</h3>
+        <p>Both are good business phone systems. Aircall offers a power dialer and no predictive dialing. JustCall keeps predictive dialing in its separate sales dialer plans, not in its standard plans, where Pro is $49 a user a month on annual billing. For a lead floor that needs predictive pacing and tight drop-rate control, either one is a workaround.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COST -->
+<section id="cost">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>What one accepted transfer costs</h2>
+      <p>Change any number. The figures update as you type.</p>
+    </div>
+    <div class="calc" id="calc">
+      <div class="calc-in">
+        <fieldset>
+          <legend>Your floor</legend>
+          <div class="fields">
+            <div class="field"><label for="agents">Agents</label><input id="agents" type="number" min="1" max="500" step="1" value="10" inputmode="numeric"></div>
+            <div class="field"><label for="hours">Hours per agent per day</label><input id="hours" type="number" min="1" max="16" step="0.5" value="8" inputmode="decimal"></div>
+            <div class="field"><label for="days">Working days per month</label><input id="days" type="number" min="1" max="31" step="1" value="22" inputmode="numeric"></div>
+            <div class="field"><label for="outmin">Billed outbound minutes per agent hour</label><input id="outmin" type="number" min="0" max="60" step="1" value="35" inputmode="numeric"><small>Answered calls only, people and voicemail</small></div>
+            <div class="field"><label for="xfers">Accepted transfers per agent per day</label><input id="xfers" type="number" min="0" max="100" step="0.5" value="3" inputmode="decimal"></div>
+            <div class="field"><label for="xmin">Minutes on each live transfer</label><input id="xmin" type="number" min="0" max="120" step="1" value="10" inputmode="numeric"><small>Billed on two legs while the call is bridged</small></div>
+            <div class="field"><label for="inmin">Inbound minutes per month</label><input id="inmin" type="number" min="0" step="100" value="3000" inputmode="numeric"></div>
+            <div class="field"><label for="nums">Local numbers in the pool</label><input id="nums" type="number" min="0" step="1" value="30" inputmode="numeric"></div>
+            <div class="field"><label for="unans">Unanswered dial attempts per agent hour</label><input id="unans" type="number" min="0" step="1" value="40" inputmode="numeric"><small>Calls that ring out, are busy or are not in service</small></div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Fully loaded, optional</legend>
+          <div class="fields">
+            <div class="field"><label for="wage">Agent cost per hour, USD</label><input id="wage" type="number" min="0" step="0.25" placeholder="Add to include" inputmode="decimal"></div>
+            <div class="field"><label for="leads">Lead and media cost per month, USD</label><input id="leads" type="number" min="0" step="50" placeholder="Add to include" inputmode="decimal"></div>
+          </div>
+        </fieldset>
+        <details class="rates">
+          <summary>Rates used in this model</summary>
+          <div class="fields">
+            <div class="field"><label for="r_out">Outbound per minute, USD</label><input id="r_out" type="number" min="0" step="0.0001" value="0.0100" inputmode="decimal"></div>
+            <div class="field"><label for="r_in">Inbound per minute, USD</label><input id="r_in" type="number" min="0" step="0.0001" value="0.0034" inputmode="decimal"></div>
+            <div class="field"><label for="r_num">Local number per month, USD</label><input id="r_num" type="number" min="0" step="0.01" value="1.15" inputmode="decimal"></div>
+            <div class="field"><label for="r_srv">US cloud server per month, USD</label><input id="r_srv" type="number" min="0" step="1" value="168" inputmode="decimal"><small>Dedicated 8 vCPU and 16 GB at a published US cloud price</small></div>
+            <div class="field"><label for="r_att">Carrier fee per unanswered attempt, USD</label><input id="r_att" type="number" min="0" step="0.0001" value="0" inputmode="decimal"><small>Some carriers charge for unanswered attempts once they pass a share of traffic. The blueprint prices this per carrier.</small></div>
+            <div class="field"><label for="r_lic">Dialer licence per seat per month, USD</label><input id="r_lic" type="number" min="0" step="1" value="0" inputmode="decimal"><small>0 for VICIdial. Enter a cloud dialer's seat price to compare.</small></div>
+          </div>
+        </details>
+      </div>
+      <div class="calc-out">
+        <div class="out-block">
+          <p class="out-label">Technology cost per accepted transfer</p>
+          <p class="big num" id="o_per" aria-live="polite">$0.00</p>
+          <p class="out-label num" id="o_count"></p>
+        </div>
+        <div class="out-block">
+          <p class="out-label">Technology cost per month</p>
+          <p class="big num" id="o_month" style="font-size:2rem">$0</p>
+          <ul class="breakdown num" id="o_break"></ul>
+        </div>
+        <div class="out-block">
+          <p class="out-label">Fully loaded cost per accepted transfer</p>
+          <p class="big num" id="o_full" style="font-size:2rem">Add agent cost</p>
+        </div>
+        <p class="calc-foot">Defaults are estimates for planning, not vendor quotes. Rates come from published US carrier and cloud price lists and are confirmed for your company in the blueprint. A bridged live transfer keeps two call legs open, so its minutes count twice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<section id="controls" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Compliance and security you can test</h2>
+      <p>Each control comes with the check we run before go-live. Scripts, consent wording and recording policy are approved by your counsel; we build them in and prove they work.</p>
+    </div>
+    <div class="controls">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Compliance control</th><th scope="col">How we prove it</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Consent evidence stored with every lead: form wording, time stamp, page and IP</th><td>Open any call record and the consent evidence is one click away</td></tr>
+            <tr><th scope="row">Opt-outs honored across every campaign</th><td>A test number marked opt-out is refused on the next dial attempt</td></tr>
+            <tr><th scope="row">National and state Do Not Call lists where a call is not covered by consent</th><td>A listed test number is blocked and the reason logged</td></tr>
+            <tr><th scope="row">Calling hours in the lead's own time zone, federal 8 am to 9 pm and stricter state windows</th><td>A lead whose window has closed is queued for the next one</td></tr>
+            <tr><th scope="row">Predictive dialing inside the federal abandoned-call rules: 3 percent cap per campaign over 30 days, 15 seconds or four rings before hanging up, an identifying message with an opt-out within 2 seconds</th><td>Drop rate shown per campaign every day and capped in the dialer; the message plays on a forced test drop</td></tr>
+            <tr><th scope="row">Recording disclosure at the start of every recorded call</th><td>Every sampled recording starts with the disclosure</td></tr>
+            <tr><th scope="row">Recording access limited and logged, retention set by you</th><td>Agents cannot download; each playback appears in the access log</td></tr>
+            <tr><th scope="row">Call records kept for five years, the federal telemarketing record period</th><td>Any call from the pilot can be pulled with its lead, consent and outcome</td></tr>
+          </tbody>
+        </table>
+        <p class="calc-foot" style="padding:0 16px 14px">If any campaign calls numbers that are not covered by written consent, National Do Not Call access applies and the list must be refreshed at least every 31 days. For the year from October 1, 2026 the first five area codes are free, then $85 per area code a year, up to $23,425 for every area code.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Security control</th><th scope="col">How we prove it</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">SIP edge accepts traffic only from the carrier</th><td>A connection attempt from any other address is dropped and banned</td></tr>
+            <tr><th scope="row">Destinations limited to the US and Canada, premium numbers blocked</th><td>A test call to a blocked prefix is refused</td></tr>
+            <tr><th scope="row">Concurrent call cap and daily spend alert at the dialer and the carrier</th><td>Crossing the test threshold triggers the alert</td></tr>
+            <tr><th scope="row">Admin access through a private network with two-step login</th><td>The admin panel is unreachable from the open internet</td></tr>
+            <tr><th scope="row">Agents get browser access to their screen only</th><td>An agent login cannot reach settings, lists or recordings</td></tr>
+            <tr><th scope="row">Nightly backups</th><td>A full restore to a fresh server before go-live</td></tr>
+            <tr><th scope="row">Patching and monitoring</th><td>Alerts arrive in your chosen channel during the pilot</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLLOUT -->
+<section id="rollout">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Three milestones to ten agents</h2>
+      <p>Carrier verification runs while we build the server and dialer, so the approval wait overlaps with our work.</p>
+    </div>
+    <ol class="miles">
+      <li class="mile">
+        <h3>1. Decision blueprint</h3>
+        <p class="when">3 working days</p>
+        <ul>
+          <li>Carrier eligibility for your company and your traffic, in writing</li>
+          <li>Dialer decision on your six criteria</li>
+          <li>Architecture fitted to your agent countries</li>
+          <li>Cost model with your real volumes</li>
+          <li>Compliance and acceptance checklist</li>
+          <li>Implementation plan with dates</li>
+        </ul>
+      </li>
+      <li class="mile">
+        <h3>2. Two agents live</h3>
+        <p class="when">7 working days after carrier approval and access</p>
+        <ul>
+          <li>US server, dialer and locked down edge</li>
+          <li>Numbers, caller ID and attestation in place</li>
+          <li>Inbound routing, IVR and queues</li>
+          <li>Recording with disclosure, quality monitoring</li>
+          <li>Lead intake with every check in front of the dialer</li>
+          <li>Live transfer flow with your call tracker, one CRM connection</li>
+          <li>Two agents on live leads, acceptance tests passed</li>
+        </ul>
+      </li>
+      <li class="mile">
+        <h3>3. Ten agents and handover</h3>
+        <p class="when">3 more working days</p>
+        <ul>
+          <li>Eight more agents with roles and permissions</li>
+          <li>Full load test at ten agents</li>
+          <li>Number pool sized for ten agents and registered</li>
+          <li>Supervisor tools and live dashboards</li>
+          <li>Agent and admin guides</li>
+          <li>Every account and credential handed to you</li>
+          <li>Seven days of hands-on support after go-live</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="tests">
+      <h3>Acceptance tests for milestones 2 and 3</h3>
+      <ul>
+        <li>A new lead is dialed within 60 seconds when its calling window is open and an agent is free</li>
+        <li>A lead on an opt-out or Do Not Call list is never dialed, and the reason is logged</li>
+        <li>A lead outside its calling window waits for the next window</li>
+        <li>The same lead arriving twice creates no second call and no second transfer</li>
+        <li>A test call from each of your numbers reaches a verification line that reads the signature and shows full attestation</li>
+        <li>On a live transfer the agent introduces the caller, the buyer accepts, the agent leaves and the call continues</li>
+        <li>When a buyer does not answer, the transfer is logged as failed, the agent keeps the caller and nothing is billable</li>
+        <li>A transfer counts as accepted only when the buyer's own rules are met, not when the call merely connects</li>
+        <li>Every recording starts with the disclosure, and every playback is logged</li>
+        <li>Ten agents dial at the agreed pace for a full hour with clean audio</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS -->
+<section id="questions" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Your seven questions, answered</h2>
+    </div>
+    <ol class="qa">
+      <li><h3>Have you set up a call center for a European or non-US company calling US customers?</h3><p>We built the production calling edge for an Israeli contact-center platform: encrypted SIP and browser calling, fraud limits per account and flood protection, delivered in three milestones and signed off, with their technical lead available as a reference. We have also run our own offshore lead-generation and customer-service floor of 60 to 70 people, and our engineers work US hours every day for clients across US time zones.</p></li>
+      <li><h3>Which dialer would you recommend, and why?</h3><p>VICIdial on a US cloud server. It covers predictive dialing, ratio dialing for power and progressive pacing, preview and manual dialing, plus inbound and blended calls in one system, carries no per-seat licence, and keeps your lead data and transfer logic under your control. The trade-off is administration, which our setup and managed operations cover. If you would rather own no servers, Convoso is the managed alternative at a per-seat price.</p></li>
+      <li><h3>Which providers can issue US numbers to a European company without a US address?</h3><p>Several large US carriers onboard companies registered abroad. They verify your company with its own registration, address and an authorized representative, assign the numbers to that verified profile, and sign your calls with full attestation once both are approved. Where they differ is how they treat dialer traffic: fees on unanswered attempts, calls-per-second limits and rules on very short or unanswered calls. In the blueprint you get those terms in writing from the carriers that fit your traffic, and you choose.</p></li>
+      <li><h3>Can you handle the complete setup?</h3><p>Yes: US server and dialer, locked down SIP edge, carrier trunks and numbers, agent accounts and permissions, inbound and outbound routing, IVR and queues, recording and quality monitoring, CRM and call tracker connection, reporting, remote agent access, security, testing and handover.</p></li>
+      <li><h3>What would the setup cost for about 10 agents, including monthly costs?</h3><p>Setup with us is $2,450 in three fixed milestones. Running cost for ten agents comes to <span class="num" id="q5_month">$0</span> a month in technology at the calculator's default volumes, with no dialer licence fee. Agent pay and lead cost come on top, and you can add both in the calculator.</p></li>
+      <li><h3>How long would the implementation take?</h3><p>Blueprint in 3 working days. Two agents live 7 working days after the carrier approves your company and we have access. Ten agents 3 working days after that. Carrier verification runs in parallel with our build.</p></li>
+      <li><h3>Can you share examples of similar projects?</h3><p>Production SIP and browser calling edge for an Israeli contact-center platform, built on Kamailio, Asterisk and RTPengine, delivered and signed off. Emergency restoration of a Cisco SIP phone system for a company in the superyacht industry, rated 5.0. Our own offshore lead-generation and customer-service floor of 60 to 70 people. A technical reference is available on request.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PRICE -->
+<section id="price">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Fixed price per milestone</h2>
+      <p>Third-party costs such as the server, numbers and minutes are billed to your company directly by each provider.</p>
+    </div>
+    <div class="price">
+      <div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Milestone</th><th scope="col">Time</th><th scope="col" class="amt">Price</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">1. Decision blueprint</th><td>3 working days</td><td class="amt num">$350</td></tr>
+              <tr><th scope="row">2. Two agents live</th><td>7 working days after carrier approval and access</td><td class="amt num">$1,450</td></tr>
+              <tr><th scope="row">3. Ten agents and handover</th><td>3 working days</td><td class="amt num">$650</td></tr>
+            </tbody>
+            <tfoot><tr><th scope="row">Total to ten agents live</th><td></td><td class="amt num">$2,450</td></tr></tfoot>
+          </table>
+        </div>
+        <div class="ops">
+          <h3>After go-live, if you want it: managed operations at $750 a month</h3>
+          <p style="margin:0">Dialer and server administration, security updates and backups, number health checks and replacements, list and suppression refreshes, campaign changes, a monthly report, and support during US calling hours.</p>
+        </div>
+      </div>
+      <div>
+        <ul class="terms">
+          <li>Each milestone is funded before it starts. Milestone 1 is released on delivery of the blueprint. Milestones 2 and 3 are released when their acceptance tests pass.</li>
+          <li>Every account is opened in your company's name: carrier, numbers, server and dialer. We do not resell minutes or numbers.</li>
+          <li>The price is fixed. If a task takes longer than we planned, that time is ours.</li>
+          <li>Nothing goes live before it passes testing, and nightly backups with a tested restore mean no lead or recording is lost.</li>
+          <li>The blueprint is yours to keep, whoever builds the rest.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- START -->
+<section id="start" class="band start">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>What we need to start the blueprint</h2>
+    </div>
+    <ol>
+      <li>The company that will own the carrier accounts and numbers, and who signs for it during verification</li>
+      <li>The countries your agents will work from, and the number of agents at launch</li>
+      <li>The first campaign: outbound to your own leads with live transfers, inbound, or both, with rough monthly lead and transfer volumes</li>
+      <li>The call tracker and CRM that transfers and dispositions should flow into</li>
+      <li>What your buyers count as an accepted transfer</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Figures marked as defaults or estimates are planning inputs, not vendor quotes. Legal requirements are listed so they can be built and tested; final scripts and consent wording rest with your counsel.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---------- call path ---------- */
+  var CASES = {
+    "new": {
+      states:["pass","pass","pass","pass","pass","pass","pass"],
+      notes:[
+        "Form fill received. Consent evidence and time stamp stored with the lead.",
+        "No opt-out or Do Not Call match. Calling window open in the lead's time zone.",
+        "Dialed from the US server on a number your company owns.",
+        "Signed with full attestation by the carrier.",
+        "Agent answers in a browser softphone. Recording starts after the disclosure.",
+        "Agent stays on, introduces the caller, the firm picks up.",
+        "Accepted under the buyer's rules and logged. Billable."
+      ],
+      tag:["pass","Billable"], text:"Transfer accepted and logged against the buyer's rules."
+    },
+    "optout": {
+      states:["pass","block","idle","idle","idle","idle","idle"],
+      notes:[
+        "Form fill received. Consent evidence and time stamp stored with the lead.",
+        "Number matches your opt-out list. No dial. Reason logged.",
+        "Not reached.","Not reached.","Not reached.","Not reached.","Not reached."
+      ],
+      tag:["block","Blocked"], text:"Stopped before dialing. Nothing reached the consumer."
+    },
+    "hours": {
+      states:["pass","hold","idle","idle","idle","idle","idle"],
+      notes:[
+        "Form fill received at 8:40 pm in the lead's time zone.",
+        "The state's calling window closed at 8 pm. Queued for the next window.",
+        "Waits for the window.","Not reached yet.","Not reached yet.","Not reached yet.","Not reached yet."
+      ],
+      tag:["hold","Held"], text:"Held until calling is allowed in the lead's own time zone."
+    },
+    "busy": {
+      states:["pass","pass","pass","pass","pass","block","hold"],
+      notes:[
+        "Form fill received. Consent evidence and time stamp stored with the lead.",
+        "No opt-out or Do Not Call match. Calling window open in the lead's time zone.",
+        "Dialed from the US server on a number your company owns.",
+        "Signed with full attestation by the carrier.",
+        "Agent qualifies the caller. Recording starts after the disclosure.",
+        "The firm's line does not answer in the agreed time.",
+        "Agent keeps the caller and books a callback. Logged as failed, not billable."
+      ],
+      tag:["hold","Not billable"], text:"No accepted transfer. The caller stays with your agent and a callback is booked."
+    },
+    "dupe": {
+      states:["block","idle","idle","idle","idle","idle","idle"],
+      notes:[
+        "Same phone number arrived 40 minutes ago. Merged into the existing lead.",
+        "Not reached.","Not reached.","Not reached.","Not reached.","Not reached.","Not reached."
+      ],
+      tag:["block","Merged"], text:"No second call and no second transfer."
+    }
+  };
+  var steps = Array.prototype.slice.call(document.querySelectorAll("#path .step"));
+  var outcome = document.getElementById("outcome");
+  var buttons = Array.prototype.slice.call(document.querySelectorAll(".scenarios button"));
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var timers = [];
+  function clearTimers(){ timers.forEach(function(t){ clearTimeout(t); }); timers = []; }
+  function setOutcome(c){
+    outcome.innerHTML = "";
+    var tag = document.createElement("span");
+    tag.className = "tag" + (c.tag[0] === "pass" ? "" : " " + c.tag[0]);
+    tag.textContent = c.tag[1];
+    outcome.appendChild(tag);
+    outcome.appendChild(document.createTextNode(c.text));
+  }
+  function run(name){
+    var c = CASES[name]; if(!c) return;
+    clearTimers();
+    buttons.forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-case") === name ? "true" : "false"); });
+    steps.forEach(function(s, i){
+      s.setAttribute("data-state","idle"); s.classList.remove("lit");
+      s.querySelector(".step-note").textContent = c.notes[i];
+    });
+    outcome.textContent = "";
+    if(reduce){
+      steps.forEach(function(s, i){ s.setAttribute("data-state", c.states[i]); });
+      setOutcome(c); return;
+    }
+    var delay = 0;
+    steps.forEach(function(s, i){
+      if(c.states[i] === "idle") return;
+      delay += 360;
+      timers.push(setTimeout(function(){
+        s.setAttribute("data-state", c.states[i]); s.classList.add("lit");
+        timers.push(setTimeout(function(){ s.classList.remove("lit"); }, 260));
+      }, delay));
+    });
+    timers.push(setTimeout(function(){ setOutcome(c); }, delay + 300));
+  }
+  buttons.forEach(function(b){ b.addEventListener("click", function(){ run(b.getAttribute("data-case")); }); });
+  run("new");
+
+  /* ---------- calculator ---------- */
+  function val(id){ var v = parseFloat(document.getElementById(id).value); return isFinite(v) && v >= 0 ? v : 0; }
+  function opt(id){ var el = document.getElementById(id); if(el.value === "") return null; var v = parseFloat(el.value); return isFinite(v) && v >= 0 ? v : null; }
+  function money(n, dp){ return "$" + n.toLocaleString("en-US", {minimumFractionDigits: dp, maximumFractionDigits: dp}); }
+  function calc(){
+    var a = val("agents"), h = val("hours"), d = val("days"), om = val("outmin"),
+        x = val("xfers"), xm = val("xmin"), im = val("inmin"), n = val("nums"), un = val("unans");
+    var rOut = val("r_out"), rIn = val("r_in"), rNum = val("r_num"), rSrv = val("r_srv"), rLic = val("r_lic"), rAtt = val("r_att");
+    var outMinutes = a * h * d * om;
+    var transfers = a * x * d;
+    var xferMinutes = transfers * xm * 2;
+    var lines = [
+      ["US server", rSrv],
+      ["Numbers", n * rNum],
+      ["Outbound minutes", outMinutes * rOut],
+      ["Live transfer minutes", xferMinutes * rOut],
+      ["Inbound minutes", im * rIn],
+      ["Unanswered attempt fees", a * h * d * un * rAtt],
+      ["Dialer licences", a * rLic]
+    ];
+    var month = lines.reduce(function(s, l){ return s + l[1]; }, 0);
+    document.getElementById("o_month").textContent = money(month, 0);
+    var q5 = document.getElementById("q5_month"); if(q5 && !q5.getAttribute("data-set")){ q5.textContent = money(month, 0); q5.setAttribute("data-set","1"); }
+    var ul = document.getElementById("o_break"); ul.innerHTML = "";
+    lines.forEach(function(l){
+      var li = document.createElement("li");
+      var s1 = document.createElement("span"); s1.textContent = l[0];
+      var s2 = document.createElement("span"); s2.textContent = money(l[1], 0);
+      li.appendChild(s1); li.appendChild(s2); ul.appendChild(li);
+    });
+    var per = transfers > 0 ? month / transfers : 0;
+    document.getElementById("o_per").textContent = transfers > 0 ? money(per, 2) : "No transfers";
+    document.getElementById("o_count").textContent = Math.round(transfers).toLocaleString("en-US") + " accepted transfers a month, " + Math.round(outMinutes + xferMinutes).toLocaleString("en-US") + " outbound minutes";
+    var wage = opt("wage"), leads = opt("leads");
+    var full = document.getElementById("o_full");
+    if(wage === null){ full.textContent = "Add agent cost"; }
+    else if(transfers === 0){ full.textContent = "No transfers"; }
+    else { full.textContent = money((month + a * h * d * wage + (leads || 0)) / transfers, 2); }
+  }
+  Array.prototype.slice.call(document.querySelectorAll("#calc input")).forEach(function(el){ el.addEventListener("input", calc); });
+  calc();
+})();
+</script>
+</body>
+</html>
