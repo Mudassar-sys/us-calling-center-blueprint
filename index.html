@@ -291,7 +291,7 @@ footer p{max-width:80ch}
 <section class="hero">
   <div class="wrap">
     <h1>A US calling floor run from Europe, built around the accepted transfer</h1>
-    <p class="lede">Your company controls the carrier account, US numbers and dialer. We confirm carrier eligibility, build a two-agent pilot, then expand to ten after the tests pass. Agents use browser calling from approved, tested locations. Each live transfer is matched to the buyer’s acceptance rules, with the cost visible before you scale.</p>
+    <p class="lede">Your company holds the carrier account, the US numbers and the dialer. We confirm carrier eligibility, put two agents live in a pilot, then grow to ten once the tests pass, in three fixed milestones. The dialer runs on a US server, agents work in a browser from the countries you choose, each location tested first, and every live transfer is tracked against your buyer's acceptance rules.</p>
 
     <div class="path-wrap" aria-labelledby="path-h">
       <div class="path-top">
@@ -314,7 +314,7 @@ footer p{max-width:80ch}
         <li class="step" data-state="idle"><span class="lamp" aria-hidden="true"></span><span class="step-title">Accepted</span><span class="step-note"></span></li>
       </ol>
       <p class="outcome" id="outcome" aria-live="polite"></p>
-      <p class="path-note">This interactive blueprint illustrates the proposed behavior. The pilot must prove each case with real test calls and logs before go-live.</p>
+      <p class="path-note">This shows how the finished system is built to handle each case. Each case is also an acceptance test the pilot must pass with real calls and logs before go-live.</p>
     </div>
   </div>
 </section>
@@ -324,20 +324,20 @@ footer p{max-width:80ch}
   <div class="wrap">
     <div class="sec-head">
       <h2>Yes, a European company can own and use US numbers</h2>
-      <p>Eligibility depends on your legal entity, operating countries, number type and calling use case. We confirm these before selecting a carrier.</p>
+      <p>The question that decides everything else is not where you are registered. It is whether the carrier has verified who you are and what you will call for.</p>
     </div>
     <div class="cols">
       <div>
-        <p>Selected providers support non-US businesses using US numbers, subject to their current documentation, country and use-case requirements. We submit your real business address and company documents. Number availability, outbound permissions and capacity are confirmed for your account before implementation starts.</p>
-        <p>On supported routes, STIR/SHAKEN describes what the signing provider can verify about the caller and number:</p>
+        <p>US carriers sell local and toll-free numbers to companies registered outside the US. The carrier verifies your company with its own registration and business address; a US address is not part of it. New accounts can start on tight limits for numbers and outbound calls until that verification passes, so it is the first thing we start, and your number availability and calling limits are confirmed in the blueprint before any build begins.</p>
+        <p>Every outbound call is signed with an attestation level that the receiving network reads before the phone rings:</p>
         <div class="attest">
-          <b class="a">A</b><span>The signing provider verifies the caller and the right to use the number. Required profiles and number assignments must be approved. For Twilio, this includes its Business Profile and linked SHAKEN/STIR Trust Product. Each launch number must pass the agreed A-attestation test before milestone 2 sign-off.</span>
+          <b class="a">A</b><span>The carrier knows your company and your right to the number. Your calls get this once the carrier has approved your company profile and, where it asks for one, a caller identity profile linked to it, with each number assigned in your own account. Milestone 2 is signed off only when every launch number shows A on the agreed test line.</span>
           <b class="b">B</b><span>The carrier knows you but not your right to the number shown.</span>
-          <b class="c">C</b><span>The signing provider can identify the call’s entry point but cannot fully authenticate its originator. An agent working abroad does not by itself determine the attestation level.</span>
+          <b class="c">C</b><span>The provider knows where the call entered its network but cannot vouch for who started it. Calls handed in from abroad usually land here, and they get answered less.</span>
         </div>
-        <p>US hosting keeps the dialer close to its carrier connection. Attestation depends on the provider, verified identity, number authorization and route; server location alone does not establish it.</p>
-        <p>We retain the provider call ID and attestation evidence for each tested number and route, then check delivery on agreed destination networks. Downstream networks can lose authentication information. A attestation does not guarantee delivery, a particular handset display, freedom from spam labels or answer rate.</p>
-        <p class="muted">The blueprint records the carrier requirements and compliance rules used for implementation. Changes to those requirements are reviewed during managed operations.</p>
+        <p>The dialer sits on a US server next to its carrier connection, for call quality and so every call starts inside the US. The attestation itself comes from your verified company and numbers, not from where the server is, and your agents' location plays no part in it.</p>
+        <p>A test call proves the signature as it leaves your carrier, and we keep each test call's record as evidence. If a call later crosses an older network, the signature can be dropped and the far end sees it unsigned, and A on its own does not stop spam labels. So after go-live we watch answer rates and labels on every number, not just the test result.</p>
+        <p class="muted">The FCC has open proposals on showing verified caller names and on marking calls that originate abroad. We build on verified identity and verified numbers now, and adjust the setup when final rules are published.</p>
       </div>
       <div>
         <div class="panel">
@@ -356,7 +356,7 @@ footer p{max-width:80ch}
             <li>Register each number with the free caller registry that feeds carrier spam analytics</li>
             <li>Show local numbers that match the lead's area</li>
             <li>Cap calls per number per day and rotate across the pool</li>
-            <li>Check labels weekly, investigate complaints and traffic patterns, and request correction where a label is wrong</li>
+            <li>Check labels every week, find the cause behind any flag, and file a correction where a label is wrong</li>
           </ul>
         </div>
       </div>
@@ -421,7 +421,7 @@ footer p{max-width:80ch}
         <text class="t2" x="366" y="296">Recordings, reports, off-server backups</text>
         <rect class="bx" x="350" y="334" width="320" height="64"/>
         <text class="t1" x="366" y="360">Locked down SIP edge</text>
-        <text class="t2" x="366" y="382">Carrier-only access, call and spend caps</text>
+        <text class="t2" x="366" y="382">Carrier-only trunk, call and spend caps</text>
         <rect class="bxg" x="350" y="422" width="320" height="82"/>
         <text class="t1" x="366" y="450">US carrier</text>
         <text class="t2" x="366" y="472">Numbers owned by your company</text>
@@ -456,7 +456,7 @@ footer p{max-width:80ch}
           <li><strong>Agents, in the countries you choose.</strong> Browser softphone and headset, encrypted audio to the dialer, each location tested before it goes live. Supervisors listen, coach and take over calls.</li>
           <li><strong>Lead intake and checks, in the US.</strong> Leads arrive by API in real time. Consent evidence, duplicates, opt-outs and calling hours are checked on arrival and again right before each dial.</li>
           <li><strong>Dialer on a US cloud server.</strong> Predictive, ratio, preview and inbound. Recordings, reports and off-server backups.</li>
-          <li><strong>Locked down SIP edge.</strong> Carrier trunk restricted to approved carrier addresses. Separate authenticated browser access. Call and spend caps.</li>
+          <li><strong>Locked down SIP edge.</strong> The carrier trunk accepts only the carrier's addresses, and browser agents log in on a separate, authenticated interface. Call and spend caps.</li>
           <li><strong>US carrier.</strong> Numbers in your account. A attestation tested on the agreed routes.</li>
           <li><strong>Other end of the call.</strong> Consumers who asked to be called, buyers reached by live transfer, and your CRM and call tracker receiving every outcome.</li>
         </ol>
@@ -467,15 +467,15 @@ footer p{max-width:80ch}
     <div class="arch-notes">
       <div>
         <h3>Your agents</h3>
-        <p>Agents use a supported browser and headset. Each permitted location passes audio and connection tests, including restrictive networks and reconnects. Browser signaling uses WSS and media uses DTLS-SRTP; any required relay is sized and priced in the blueprint. Supervisors receive permission-based monitoring and coaching tools.</p>
+        <p>Nothing to install beyond a browser and a headset. Audio is encrypted from the agent's browser to the US server, and the phone call itself is placed from that server, not from abroad. Each agent location passes a connection and audio test before it goes live, including a reconnect and a restrictive office network; if a location needs a relay server, it is sized and priced in the blueprint. Supervisors can listen, coach in the agent's ear or take over.</p>
       </div>
       <div>
         <h3>In the US</h3>
-        <p>The initial server is sized for a ten-agent pilot and validated at the agreed dialing rate, concurrent call legs and recording load. The carrier trunk accepts approved carrier traffic; browser agents use a separate authenticated interface. Leads are rechecked before dialing, and suppression updates cancel queued calls. Unknown eligibility or unavailable checks hold the lead.</p>
+        <p>One cloud server runs the dialer for ten agents, tested at the agreed dialing pace, call legs and recording load. The carrier trunk accepts only the carrier's traffic, and browser agents log in on a separate, authenticated interface. Leads are checked on arrival and again right before each dial, so an opt-out that lands while a lead waits still stops the call. If a check cannot run, the lead waits instead of being dialed.</p>
       </div>
       <div>
         <h3>Your data</h3>
-        <p>The blueprint maps controller and processor roles, data flows, retention and agent access. Required processing agreements and international transfer safeguards are confirmed before live personal data is used. Access is limited by role, with recording access logged.</p>
+        <p>Your company is the controller under GDPR, so every vendor is covered by a processing agreement and offshore access runs under transfer safeguards, all in place before live lead data is used. Agents see only what the call needs, and every playback of a recording is logged.</p>
       </div>
     </div>
   </div>
@@ -486,7 +486,7 @@ footer p{max-width:80ch}
   <div class="wrap">
     <div class="sec-head">
       <h2>Three dialers measured on your six criteria</h2>
-      <p>Reliability, pricing, scalability, CRM integrations, reporting and ease of use, plus dialing modes. Ratings are our preliminary fit assessment; vendor plans, minimum seats and integrations are confirmed during the blueprint.</p>
+      <p>Reliability, pricing, scalability, CRM integrations, reporting and ease of use, plus the dialing modes a lead floor needs. Ratings are our assessment for a ten-agent floor; vendor plans, minimum seats and integrations are confirmed in the blueprint.</p>
     </div>
     <div class="table-wrap">
       <table>
@@ -505,8 +505,8 @@ footer p{max-width:80ch}
             <td><span class="fit good">Strong</span><br>Do Not Call list management, time-zone dialing rules, verified caller ID signing, a manual-only mode for consent-sensitive lists</td></tr>
           <tr><th scope="row">Pricing</th>
             <td><span class="fit good">Strong</span><br>Open source with no licence fee. You pay the server, numbers and minutes</td>
-            <td><span class="fit mid">Fair</span><br>Account-specific quote required, including minimum seats, usage and add-ons</td>
-            <td><span class="fit mid">Fair</span><br>Account-specific quote required, including minimum seats, usage and add-ons</td></tr>
+            <td><span class="fit mid">Fair</span><br>Not published. Quoted per account, including minimum seats, usage and add-ons</td>
+            <td><span class="fit mid">Fair</span><br>Not published. Quoted per account, including minimum seats, usage and add-ons</td></tr>
           <tr><th scope="row">Reliability</th>
             <td><span class="fit mid">Fair</span><br>Over 14,000 installations worldwide. Uptime depends on the server and its administration, which we set up and monitor</td>
             <td><span class="fit good">Strong</span><br>Run by the vendor in its own cloud</td>
@@ -542,7 +542,7 @@ footer p{max-width:80ch}
       </div>
       <div>
         <h3>Why not Aircall or JustCall</h3>
-        <p>Both are good business phone systems. Aircall’s power dialer is worth considering if agent-led dialing meets your volume and workflow needs; it does not meet a requirement for predictive pacing. JustCall does offer predictive dialing, on its separate Sales Dialer plans. It would work, but it adds a seat licence on top of minutes (its standard Pro plan alone is $49 a user a month on annual billing), and your drop-rate and transfer rules would live in a sales-team tool instead of on a server you own.</p>
+        <p>Both are good business phone systems. Aircall has a power dialer, which works if agent-paced dialing is enough for your volume, but no predictive dialing. JustCall does offer predictive dialing, on its separate Sales Dialer plans. It would work, but it adds a seat licence on top of minutes (its standard Pro plan alone is $49 a user a month on annual billing), and your drop-rate and transfer rules would live in a sales-team tool instead of on a server you own.</p>
       </div>
     </div>
   </div>
@@ -563,9 +563,9 @@ footer p{max-width:80ch}
             <div class="field"><label for="agents">Agents</label><input id="agents" type="number" min="1" max="500" step="1" value="10" inputmode="numeric"></div>
             <div class="field"><label for="hours">Hours per agent per day</label><input id="hours" type="number" min="1" max="16" step="0.5" value="8" inputmode="decimal"></div>
             <div class="field"><label for="days">Working days per month</label><input id="days" type="number" min="1" max="31" step="1" value="22" inputmode="numeric"></div>
-            <div class="field"><label for="outmin">Pre-transfer billed minutes per agent hour</label><input id="outmin" type="number" min="0" step="1" value="35" inputmode="numeric"><small>Consumer calls and voicemail before bridging; exclude the transfer phase counted below</small></div>
+            <div class="field"><label for="outmin">Billed outbound minutes per agent hour</label><input id="outmin" type="number" min="0" step="1" value="35" inputmode="numeric"><small>Answered calls and voicemail, not counting time in a transfer</small></div>
             <div class="field"><label for="xfers">Connected transfers per agent per day</label><input id="xfers" type="number" min="0" max="100" step="0.5" value="3" inputmode="decimal"></div>
-            <div class="field"><label for="accept">Transfers accepted by the buyer, percent</label><input id="accept" type="number" min="0" max="100" step="1" value="100" inputmode="numeric"><small>100% is a best-case assumption. Rejected connected transfers still incur minutes.</small></div>
+            <div class="field"><label for="accept">Share of transfers the buyer accepts, percent</label><input id="accept" type="number" min="0" max="100" step="1" value="100" inputmode="numeric"><small>100 is the best case. Rejected transfers still use minutes.</small></div>
             <div class="field"><label for="xmin">Minutes on each connected transfer</label><input id="xmin" type="number" min="0" max="120" step="1" value="10" inputmode="numeric"><small>Billed on two legs while the call is bridged</small></div>
             <div class="field"><label for="inmin">Inbound minutes per month</label><input id="inmin" type="number" min="0" step="100" value="3000" inputmode="numeric"></div>
             <div class="field"><label for="nums">Local numbers in the pool</label><input id="nums" type="number" min="0" step="1" value="30" inputmode="numeric"></div>
@@ -588,7 +588,7 @@ footer p{max-width:80ch}
             <div class="field"><label for="r_num">Local number per month, USD</label><input id="r_num" type="number" min="0" step="0.01" value="1.15" inputmode="decimal"></div>
             <div class="field"><label for="r_srv">US cloud server per month, USD</label><input id="r_srv" type="number" min="0" step="1" value="168" inputmode="decimal"><small>Dedicated 8 vCPU and 16 GB at a published US cloud price</small></div>
             <div class="field"><label for="r_bkp">Daily server backups, percent of server price</label><input id="r_bkp" type="number" min="0" max="100" step="1" value="30" inputmode="numeric"><small>The same cloud's published rate for daily backups</small></div>
-            <div class="field"><label for="r_sto">Off-server copies per month, USD</label><input id="r_sto" type="number" min="0" step="0.5" value="5" inputmode="decimal"><small>Starting storage allowance, 250 GB. Retention, recording format, growth and recovery traffic are sized in the blueprint.</small></div>
+            <div class="field"><label for="r_sto">Off-server copies per month, USD</label><input id="r_sto" type="number" min="0" step="0.5" value="5" inputmode="decimal"><small>Object storage for the database and recording copies, 250 GB included. Growth over your retention period is sized in the blueprint.</small></div>
             <div class="field"><label for="r_att">Carrier fee per unanswered attempt, USD</label><input id="r_att" type="number" min="0" step="0.0001" value="0" inputmode="decimal"><small>Some carriers charge for unanswered attempts once they pass a share of traffic. The blueprint prices this per carrier.</small></div>
             <div class="field"><label for="r_lic">Dialer licence per seat per month, USD</label><input id="r_lic" type="number" min="0" step="1" value="0" inputmode="decimal"><small>0 for VICIdial. Enter a cloud dialer's seat price to compare.</small></div>
           </div>
@@ -606,11 +606,11 @@ footer p{max-width:80ch}
           <ul class="breakdown num" id="o_break"></ul>
         </div>
         <div class="out-block">
-          <p class="out-label" id="l_full">Cost with entered operating expenses</p>
+          <p class="out-label" id="l_full">Cost per accepted transfer with agent and lead cost</p>
           <p class="big hint" id="o_full">Add agent and lead cost</p>
           <p class="out-note" id="o_full_note"></p>
         </div>
-        <p class="calc-foot">Defaults are planning estimates, not quotes or a promised cost per sale. This model assumes outbound consumer calls plus two local PSTN legs during each connected transfer; the pre-transfer minutes exclude that phase. Rejected connected transfers incur the same average minutes. Separate inbound usage is added. The blueprint reconciles the chosen tracker route and carrier billing to avoid double counting. Extra tracker call legs, subscriptions, compliance services, carrier surcharges, storage growth, relay hosting and taxes are additional where applicable.</p>
+        <p class="calc-foot">Defaults are planning estimates, not quotes. A bridged transfer keeps two call legs open, so its minutes count twice, and a rejected transfer uses the same minutes as an accepted one. Rates come from published US carrier and cloud price lists and are confirmed for your company in the blueprint, including how your call tracker bills the transfer leg. Not included: tracker and CRM subscriptions, any tracker per-minute charges, National Do Not Call access if a campaign needs it, carrier surcharges and taxes.</p>
       </div>
     </div>
   </div>
@@ -630,26 +630,26 @@ footer p{max-width:80ch}
           <tbody>
             <tr><th scope="row">Consent evidence stored with every lead: form wording, time stamp, page and IP</th><td>Open any call record and the consent evidence is one click away</td></tr>
             <tr><th scope="row">Opt-outs honored across every campaign and checked again right before each dial</th><td>A test number marked opt-out while its lead waits in the queue is not dialed</td></tr>
-            <tr><th scope="row">National and state Do Not Call checks, with only counsel-approved exceptions and internal opt-outs always enforced</th><td>A listed test number is blocked and the reason logged</td></tr>
+            <tr><th scope="row">National and state Do Not Call lists checked unless your counsel confirms an exception based on written consent; your own opt-out list always applies</th><td>A listed test number is blocked and the reason logged</td></tr>
             <tr><th scope="row">Calling hours in the lead's own time zone, federal 8 am to 9 pm and stricter state windows</th><td>A lead whose window has closed is queued for the next one</td></tr>
-            <tr><th scope="row">Predictive dialing enabled only after review: no more than 3% of live-person answers abandoned per campaign and applicable measurement period, minimum ring time and required identification/opt-out handling</th><td>Verify the live-answer denominator, completed-greeting timing, ring time, required message and audit records; stop or reduce pacing before the limit</td></tr>
-            <tr><th scope="row">Recording follows the approved consent policy for the caller, agent and buyer locations</th><td>Test acceptance, refusal and transfer cases; where prior consent is required, audio capture waits for that consent</td></tr>
+            <tr><th scope="row">Predictive dialing inside the federal abandoned-call rules: no more than 3 percent of live-answered calls abandoned per campaign in each 30-day period, at least 15 seconds or four rings before an unanswered call ends, and an identifying message with an opt-out within 2 seconds of the greeting</th><td>Drop rate shown per campaign every day against live-answered calls and held below the limit in the dialer; the message plays on a forced test drop</td></tr>
+            <tr><th scope="row">Recording starts with the disclosure, so it opens every recorded call. If a caller declines, recording stops or the call ends, as your counsel approves for each state</th><td>Test calls where the caller agrees, declines and is transferred to the buyer each follow the approved policy</td></tr>
             <tr><th scope="row">Recording access limited and logged, retention set by you</th><td>Agents cannot download; each playback appears in the access log</td></tr>
             <tr><th scope="row">Call records kept for five years, the federal telemarketing record period</th><td>Any call from the pilot can be pulled with its lead, consent and outcome</td></tr>
           </tbody>
         </table>
-        <p class="calc-foot" style="padding:0 16px 14px">Counsel identifies applicable National and state Do Not Call access requirements and any permitted exceptions. Required National list checks use a version no more than 31 days old. For the year from October 1, 2026 the first five area codes are free, then $85 per area code a year, up to $23,425 for every area code.</p>
+        <p class="calc-foot" style="padding:0 16px 14px">If a campaign calls numbers not covered by written consent, National Do Not Call access applies, and every call is checked against a copy of the list no more than 31 days old. For the year from October 1, 2026 the first five area codes are free, then $85 per area code a year, up to $23,425 for every area code.</p>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr><th scope="col">Security control</th><th scope="col">How we prove it</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Carrier trunk restricted to approved carrier addresses; browser clients authenticate on a separate interface</th><td>Unauthorized trunk traffic is blocked, while an authorized browser agent can register and complete a call</td></tr>
-            <tr><th scope="row">Destinations limited to the approved US routes; premium and other international destinations blocked</th><td>A test call to a blocked prefix is refused</td></tr>
+            <tr><th scope="row">The carrier trunk accepts traffic only from the carrier, and browser agents log in on a separate, authenticated interface</th><td>Traffic from any other address is dropped and banned, while a logged-in agent can still register and place a call</td></tr>
+            <tr><th scope="row">Calls limited to US destinations; premium and international numbers blocked, including Caribbean area codes that look domestic</th><td>A test call to a blocked prefix is refused</td></tr>
             <tr><th scope="row">Concurrent call cap and daily spend alert at the dialer and the carrier</th><td>Crossing the test threshold triggers the alert</td></tr>
             <tr><th scope="row">Admin access through a private network with two-step login</th><td>The admin panel is unreachable from the open internet</td></tr>
             <tr><th scope="row">Agents get browser access to their screen only</th><td>An agent login cannot reach settings, lists or recordings</td></tr>
-            <tr><th scope="row">Recovery targets: lead data within 15 minutes and completed recordings within 30 minutes; daily server backup</th><td>Monitor the age of the last recoverable copy. Restore to a fresh server and measure data age, integrity and downtime; test a failed copy and an in-progress recording.</td></tr>
+            <tr><th scope="row">Recovery targets: lead data copied off the server every 15 minutes, finished recordings every 30 minutes, the full server daily</th><td>An alert fires when the last good copy gets too old. A full restore to a fresh server is rehearsed, including a call that was mid-recording, with data age and downtime measured</td></tr>
             <tr><th scope="row">Patching and monitoring</th><td>Alerts arrive in your chosen channel during the pilot</td></tr>
           </tbody>
         </table>
@@ -663,20 +663,20 @@ footer p{max-width:80ch}
   <div class="wrap">
     <div class="sec-head">
       <h2>Three milestones to ten agents</h2>
-      <p>Carrier onboarding starts during the blueprint. Implementation starts after account approval, required access and campaign inputs are ready. Carrier review time is external to the working-day estimates.</p>
+      <p>Carrier onboarding starts during the blueprint, so most of the approval wait overlaps with it. The two-agent build starts once the carrier has approved your account and we have access and your campaign inputs. Carrier review time sits outside our working-day count.</p>
     </div>
     <ol class="miles">
       <li class="mile">
         <h3>1. Decision blueprint</h3>
         <p class="when">3 working days</p>
         <ul>
-          <li>Documented carrier requirements, account eligibility status and traffic restrictions</li>
+          <li>Carrier requirements, your account status and any traffic limits, in writing</li>
           <li>Dialer decision on your six criteria</li>
           <li>Architecture fitted to your agent countries</li>
           <li>Cost model with your real volumes</li>
           <li>Compliance and acceptance checklist</li>
           <li>Implementation plan with dates</li>
-          <li>Unresolved carrier or legal dependencies are listed explicitly. You can stop after the blueprint; milestone 2 starts only when its prerequisites are met.</li>
+          <li>Anything still open with a carrier or your counsel is listed, and milestone 2 starts only once it is resolved. You can also stop here and keep the blueprint</li>
         </ul>
       </li>
       <li class="mile">
@@ -686,7 +686,7 @@ footer p{max-width:80ch}
           <li>US server, dialer and locked down edge</li>
           <li>Numbers and caller ID in place, every number showing A attestation on the agreed test line before sign-off</li>
           <li>Inbound routing, IVR and queues</li>
-          <li>Recording consent flow and quality monitoring under the approved policy</li>
+          <li>Recording that starts with the disclosure, a tested decline path, and quality monitoring</li>
           <li>Lead intake with every check in front of the dialer, repeated right before each dial</li>
           <li>Live transfer flow to your buyers</li>
           <li>One CRM and one call tracker on their standard APIs: leads in, dispositions and transfer events out. Custom extras quoted at a fixed price</li>
@@ -711,19 +711,19 @@ footer p{max-width:80ch}
     <div class="tests">
       <h3>Acceptance tests for milestones 2 and 3</h3>
       <ul>
-        <li>A valid eligible test lead reaches its first dial attempt within 60 seconds of API receipt, with checks available, the calling window open and an agent free</li>
+        <li>An eligible test lead gets its first dial within 60 seconds of arriving by API, when the calling window is open and an agent is free</li>
         <li>A lead on an opt-out or Do Not Call list is never dialed, and the reason is logged</li>
         <li>A number added to the opt-out list while its lead waits in the queue is not dialed</li>
         <li>A lead outside its calling window waits for the next window</li>
-        <li>Replaying the same lead event creates no second call; duplicate window and intentional retry rules are recorded</li>
-        <li>Each launch number passes A-attestation testing on the selected route, with call IDs and evidence retained. A carrier or route change requires retesting.</li>
+        <li>The same lead arriving twice creates no second call and no second transfer, while planned retries still run on schedule</li>
+        <li>A test call from each launch number to the agreed verification line shows A attestation, with the call record kept as evidence. Milestone 2 is not signed off until every number does, and a carrier or route change means a retest</li>
         <li>On a live transfer the agent introduces the caller, the buyer accepts, the agent leaves and the call continues</li>
         <li>When a buyer does not answer, the transfer is logged as failed, the agent keeps the caller and nothing is billable</li>
-        <li>The buyer-confirmed acceptance event or agreed conversion rule marks a transfer billable. Missing confirmation stays pending. Duplicate, delayed and rejected events are reconciled without double credit.</li>
-        <li>Recording consent, refusal and transfer cases follow the approved policy; every authorized playback is logged</li>
-        <li>A stale or failed backup triggers an alert. A fresh-server restore meets the agreed data-age and recovery-time targets, with recovered records and recordings checked.</li>
+        <li>A transfer counts as accepted only when the buyer confirms it or its agreed rule is met, such as a minimum call length. Until then it stays pending, and duplicate, late or rejected events never count twice</li>
+        <li>Recording starts with the disclosure, test calls where the caller agrees, declines or is transferred follow the approved policy, and every playback is logged</li>
+        <li>A backup copy that fails or falls behind raises an alert, and a full restore to a fresh server meets the agreed data-age and recovery-time targets, with records and recordings checked afterwards</li>
         <li>Each agent location passes a connection and audio test before its agents go live</li>
-        <li>Ten agents run for one hour at the agreed calls-per-second, concurrent legs and recording load. Audio thresholds, transfer continuity and resource headroom are measured against the blueprint.</li>
+        <li>Ten agents dial for a full hour at the agreed pace, call legs and recording load, with audio quality, transfers and server headroom measured against the blueprint targets</li>
       </ul>
     </div>
   </div>
@@ -738,10 +738,10 @@ footer p{max-width:80ch}
     <ol class="qa">
       <li><h3>Have you set up a call center for a European or non-US company calling US customers?</h3><p>We built the production calling edge for an Israeli contact-center platform: encrypted SIP and browser calling, fraud limits per account and flood protection, delivered in three milestones and signed off, with their technical lead available as a reference. We have also run our own offshore lead-generation and customer-service floor of 60 to 70 people, and our engineers work US hours every day for clients across US time zones.</p></li>
       <li><h3>Which dialer would you recommend, and why?</h3><p>VICIdial on a US cloud server. It covers predictive dialing, ratio dialing for power and progressive pacing, preview and manual dialing, plus inbound and blended calls in one system, carries no per-seat licence, and keeps your lead data and transfer logic under your control. The trade-off is administration, which our setup and managed operations cover. If you would rather own no servers, Convoso is the managed alternative, priced per seat. It is usually sold to larger floors, so we would confirm a 10-seat account and its price in writing first.</p></li>
-      <li><h3>Which providers can issue US numbers to a European company without a US address?</h3><p>Twilio and Telnyx can both put US numbers in the name of a company registered in Europe. Twilio's business profile accepts European registration numbers and asks for your business address, with no US address required. Telnyx limits a new account to numbers from its home country until it passes its verified tier, which adds identity checks on your company and a service address. A attestation depends on approved identity, authorized numbers and the selected route. Twilio requires the approved Business Profile, linked SHAKEN/STIR Trust Product and number assignments; we verify the actual result in the pilot. Where they differ is dialer traffic. Twilio objects to a high volume of unanswered attempts and a low average call length. Telnyx bars predictive dialing of unsolicited calls and charges a fee on every dropped call once more than a fifth of calls are dropped before answer. We review the exact calling use case against current carrier terms and price applicable attempt and short-call surcharges. Account onboarding is not a legal certification of the campaign. Unresolved eligibility is a stop condition before milestone 2.</p></li>
+      <li><h3>Which providers can issue US numbers to a European company without a US address?</h3><p>Twilio and Telnyx can both put US numbers in the name of a company registered in Europe. Twilio's business profile accepts European registration numbers and asks for your business address, with no US address required. Telnyx limits a new account to numbers from its home country until it passes its verified tier, which adds identity checks on your company and a service address. Both sign calls from numbers you own with A attestation once your company passes their checks. Twilio also needs a caller identity profile linked to your company with each number assigned to it, and we confirm the actual result on test calls in the pilot. Where they differ is dialer traffic. Twilio objects to a high volume of unanswered attempts and a low average call length. Telnyx bars predictive dialing of unsolicited calls and charges a fee on every dropped call once more than a fifth of calls are dropped before answer. We check your exact calling use case against each carrier's current terms, price any attempt or short-call fees into your cost model, and start milestone 2 only once your account is cleared. A carrier approval is not a legal sign-off on the campaign itself; your consent records and scripts still carry that.</p></li>
       <li><h3>Can you handle the complete setup?</h3><p>Yes: US server and dialer, locked down SIP edge, carrier trunks and numbers, agent accounts and permissions, inbound and outbound routing, IVR and queues, recording and quality monitoring, connection to one CRM and one call tracker, reporting, remote agent access, security, testing and handover.</p></li>
       <li><h3>What would the setup cost for about 10 agents, including monthly costs?</h3><p>Setup with us is $2,450 in three fixed milestones. Running cost for ten agents comes to <span class="num" id="q5_month">$0</span> a month in technology at the calculator's default volumes, backups included and no dialer licence fee. Managed operations add $750 a month if you want us to run it for you. Agent pay, lead cost, your call tracker and CRM subscriptions and taxes come on top; the calculator adds agent pay and lead cost for you.</p></li>
-      <li><h3>How long would the implementation take?</h3><p>Blueprint in 3 working days from complete discovery inputs. Two-agent pilot in 7 working days after account approval, access and campaign inputs, including approved scripts and test leads. Ten agents in 3 more working days after pilot acceptance. Carrier review and client dependency delays are outside those estimates.</p></li>
+      <li><h3>How long would the implementation take?</h3><p>Blueprint in 3 working days once we have your answers to the start questions. Two agents live 7 working days after the carrier approves your account and we have access, approved scripts and test leads. Ten agents 3 working days after the pilot passes. Carrier review time sits outside these days, and most of it overlaps with the blueprint.</p></li>
       <li><h3>Can you share examples of similar projects?</h3><p>Production SIP and browser calling edge for an Israeli contact-center platform, built on Kamailio, Asterisk and RTPengine, delivered and signed off. Emergency restoration of a Cisco SIP phone system for a company in the superyacht industry, rated 5.0. Our own offshore lead-generation and customer-service floor of 60 to 70 people. A technical reference is available on request.</p></li>
     </ol>
   </div>
@@ -769,16 +769,16 @@ footer p{max-width:80ch}
         </div>
         <div class="ops">
           <h3>After go-live, if you want it: managed operations at $750 a month</h3>
-          <p style="margin:0">Dialer and server administration, security updates, backup and number-health checks, suppression refreshes, campaign changes and a monthly report, up to 20 hours a month. The support agreement specifies the covered US hours and time zone. During coverage, outage acknowledgement targets 1 hour and routine requests 1 business day; resolution depends on the fault. Extra work is quoted before it starts. Dedicated 30+ hours per week is a separate staffing arrangement.</p>
+          <p style="margin:0">Dialer and server administration, security updates, backup and number health checks, list and suppression refreshes, campaign changes and a monthly report, up to 20 hours of work a month. Covered hours follow your floor's US calling schedule, set in the agreement. In those hours we respond to an outage within 1 hour and handle routine changes within 1 business day; bigger changes and work beyond the 20 hours are quoted before we start. If you want a dedicated engineer on your floor full time instead, that is priced as a monthly arrangement.</p>
         </div>
       </div>
       <div>
         <ul class="terms">
           <li>Each milestone is funded before it starts. Milestone 1 is released on delivery of the blueprint. Milestones 2 and 3 are released when their acceptance tests pass.</li>
           <li>Every account is opened in your company's name: carrier, numbers, server and dialer. We do not resell minutes or numbers.</li>
-          <li>The $2,450 covers one initial campaign, one CRM and one call tracker using agreed standard APIs, and ten agents. Scope is signed off in milestone 1; included work stays fixed price. Extra integrations, HA infrastructure or additional campaigns require an agreed quote.</li>
+          <li>The price is fixed for the agreed scope: one first campaign, one CRM and one call tracker on their standard APIs, and ten agents, signed off in milestone 1. If included work takes longer than we planned, that time is ours. Extra integrations, more campaigns or a standby server are quoted first.</li>
           <li>Your current call flows keep running untouched while we build, and nothing goes live before it passes testing.</li>
-          <li>Target recovery points are 15 minutes for lead data and 30 minutes for completed recordings. We monitor recoverable-copy age and validate a full restore, including an interrupted recording. The initial single-server plan has downtime during recovery; continuous availability requires separately priced redundancy.</li>
+          <li>Lead data is copied off the server every 15 minutes and finished recordings every 30. Those are the recovery targets: we watch the age of the last good copy, alert when it falls behind, and rehearse a full restore before go-live, including a call that was mid-recording. On a single server a failure means a short outage while we restore, and the measured recovery time is written into the handover. A standby server that removes that outage is a quoted extra.</li>
           <li>The blueprint is yours to keep, whoever builds the rest.</li>
         </ul>
       </div>
@@ -793,7 +793,7 @@ footer p{max-width:80ch}
       <h2>What we need to start the blueprint</h2>
     </div>
     <ol>
-      <li>The legal entity that will hold the accounts, its registered country and the authorized representative</li>
+      <li>The company that will hold the carrier accounts and numbers, its registered country, and who signs for it during verification</li>
       <li>The countries your agents will work from, and the number of agents at launch</li>
       <li>The first campaign: outbound to your own leads with live transfers, inbound, or both, with rough monthly lead and transfer volumes</li>
       <li>The call tracker and CRM that transfers and dispositions should flow into</li>
@@ -820,8 +820,8 @@ footer p{max-width:80ch}
         "Form fill received. Consent evidence and time stamp stored with the lead.",
         "No opt-out or Do Not Call match. Calling window open in the lead's time zone.",
         "Rechecked, then dialed from the US server on a number your company owns.",
-        "A attestation on the selected route, subject to pilot verification.",
-        "Agent uses the browser softphone and follows the approved recording-consent flow.",
+        "Signed with A attestation, as tested on every launch number.",
+        "Agent answers in a browser softphone. Recording starts with the disclosure.",
         "Agent stays on, introduces the caller, the firm picks up.",
         "Accepted under the buyer's rules and logged. Billable."
       ],
@@ -851,8 +851,8 @@ footer p{max-width:80ch}
         "Form fill received. Consent evidence and time stamp stored with the lead.",
         "No opt-out or Do Not Call match. Calling window open in the lead's time zone.",
         "Rechecked, then dialed from the US server on a number your company owns.",
-        "A attestation on the selected route, subject to pilot verification.",
-        "Agent qualifies the caller under the approved recording-consent flow.",
+        "Signed with A attestation, as tested on every launch number.",
+        "Agent qualifies the caller. Recording starts with the disclosure.",
         "The firm's line does not answer in the agreed time.",
         "Agent keeps the caller and books a callback. Logged as failed, not billable."
       ],
@@ -933,7 +933,7 @@ footer p{max-width:80ch}
       ["Unanswered attempt fees", a * h * d * un * rAtt],
       ["Dialer licences", a * rLic]
     ];
-    return { agentHours: a * h * d, outMinutes: outMinutes, transfers: transfers, xferMinutes: xferMinutes, lines: lines,
+    return { agentHours: a * h * d, outMinutes: outMinutes, connected: connected, transfers: transfers, xferMinutes: xferMinutes, lines: lines,
              month: lines.reduce(function(s, l){ return s + l[1]; }, 0) };
   }
   function calc(){
@@ -953,10 +953,11 @@ footer p{max-width:80ch}
       li.appendChild(s1); li.appendChild(s2); ul.appendChild(li);
     });
     document.getElementById("o_per").textContent = transfers > 0 ? money(month / transfers, 2) : "No transfers";
-    document.getElementById("o_count").textContent = Math.round(transfers).toLocaleString("en-US") + " accepted transfers a month, " + Math.round(m.outMinutes + m.xferMinutes).toLocaleString("en-US") + " outbound minutes";
+    var counts = Math.round(m.connected) === Math.round(transfers) ? Math.round(transfers).toLocaleString("en-US") + " accepted transfers a month, " : Math.round(m.connected).toLocaleString("en-US") + " connected and " + Math.round(transfers).toLocaleString("en-US") + " accepted transfers a month, ";
+    document.getElementById("o_count").textContent = counts + Math.round(m.outMinutes + m.xferMinutes).toLocaleString("en-US") + " outbound minutes";
     var wage = opt("wage"), leads = opt("leads");
     var full = document.getElementById("o_full"), fullLabel = document.getElementById("l_full"), note = document.getElementById("o_full_note");
-    fullLabel.textContent = "Cost with entered operating expenses";
+    fullLabel.textContent = "Cost per accepted transfer with agent and lead cost";
     note.textContent = "";
     if(wage === null && leads === null){ full.className = "big hint"; full.textContent = "Add agent and lead cost"; }
     else if(transfers === 0){ full.className = "big hint"; full.textContent = "No transfers"; }
@@ -967,7 +968,7 @@ footer p{max-width:80ch}
         fullLabel.textContent = "Partial cost per accepted transfer";
         note.textContent = wage === null ? "Agent cost not added yet." : "Lead and media cost not added yet.";
       } else {
-        note.textContent = (ops ? "Technology, operations" : "Technology") + ", agent pay and lead cost included. Additional exclusions below still apply.";
+        note.textContent = (ops ? "Technology, operations" : "Technology") + ", agent pay and lead cost included. The exclusions below still apply.";
       }
     }
   }
